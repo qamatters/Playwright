@@ -35,6 +35,10 @@ build/
 ### VS Code ###
 .vscode/
 .idea/
+.mvn/
 
 ### Mac OS ###
 .DS_Store
+
+drivers/chromedriver.*
+drivers/chromedriver
