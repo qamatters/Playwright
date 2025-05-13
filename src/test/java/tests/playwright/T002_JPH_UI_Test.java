@@ -47,9 +47,9 @@ public class T002_JPH_UI_Test {
     public void checkPageTitle() {
         Logger.log("Testing T002_JPH_UI_Test.checkPageTitle");
         page.navigate("https://jsonplaceholder.typicode.com/");
-        assertEquals(page.title(), "JSONPlaceholder - Free Fake REST API");
+        assertEquals(page.title(), "JSONPlaceholder - Fake REST API");
         Logger.log(
-                page.title().contains("JSONPlaceholder - Free Fake REST API")
+                page.title().contains("JSONPlaceholder - Fake REST API")
                         ? "Test T002_JPH_UI_Test.checkPageTitle passed"
                         : "Test T002_JPH_UI_Test.checkPageTitle failed"
                 );

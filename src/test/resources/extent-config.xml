@@ -2,16 +2,11 @@
 <extentreports>
   <configuration>
     <!-- report theme -->
-    <!-- standard, dark -->
-    <theme>standard</theme>
+    <theme>dark</theme>
   
-    <!-- document encoding -->
-    <!-- defaults to UTF-8 -->
     <encoding>UTF-8</encoding>
     
-    <!-- protocol for script and stylesheets -->
-    <!-- defaults to https -->
-    <protocol>https</protocol>
+    <protocol>http</protocol>
     
     <!-- title of the document -->
     <documentTitle>Mocker - A Mock testing project based on Playwright and testNG</documentTitle>
