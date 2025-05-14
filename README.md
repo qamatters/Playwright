@@ -29,7 +29,7 @@
 
 ## :dart: About
 
-A simple mock testing project based on Selenium and REST Assured in Java
+A simple mock testing project based on Playwright and TestNG in Java
 
 ## :rocket: Technologies
 
@@ -37,8 +37,7 @@ The following tools were used in this project:
 
 - [Java](https://www.java.com/en/)
 - [Maven](https://maven.apache.org/)
-- [Selenium](https://www.selenium.dev/)
-- [REST Assured](https://rest-assured.io/)
+- [Selenium](https://playwright.dev/)
 
 ## :question: How to use
 
@@ -46,13 +45,10 @@ Follow these steps to run the project:
 
 ```bash
 # Clone this project
-$ git clone https://github.com/KhushalJangid/Maven-test-repo.git
+$ git clone https://github.com/KhushalJangid/Mocker.git
 
 # Access
-$ cd Maven-test-repo
-
-# Download and copy a chromedriver corresponding to your OS and Chrome version,
-# into ./drivers directory
+$ cd Mocker
 
 # Run all tests
 $ mvn test
