@@ -47,12 +47,12 @@ public class T002_JPH_UI_Test {
     public void checkPageTitle() {
         Logger.log("Testing T002_JPH_UI_Test.checkPageTitle");
         page.navigate("https://jsonplaceholder.typicode.com/");
-        assertEquals(page.title(), "JSONPlaceholder - Fake REST API");
         Logger.log(
-                page.title().contains("JSONPlaceholder - Fake REST API")
+                page.title().contains("jsonplaceholder")
                         ? "Test T002_JPH_UI_Test.checkPageTitle passed"
                         : "Test T002_JPH_UI_Test.checkPageTitle failed"
                 );
+        assertEquals(page.title(), "JSOlaceholder");
     }
 
     @Test
@@ -61,13 +61,13 @@ public class T002_JPH_UI_Test {
 
         page.navigate("https://jsonplaceholder.typicode.com/");
         page.click("text=/posts");
-        assertTrue(page.url().contains("/posts"));
-        assertTrue(page.content().contains("\"userId\""));
         Logger.log(
                 page.url().contains("/posts") && page.content().contains("\"userId\"")
                         ? "Test T002_JPH_UI_Test.checkPageTitle passed"
                         : "Test T002_JPH_UI_Test.checkPageTitle failed"
                 );
+        assertTrue(page.url().contains("/posts"));
+        assertTrue(page.content().contains("\"userId\""));
     }
 
     @Test
@@ -76,11 +76,11 @@ public class T002_JPH_UI_Test {
 
         page.navigate("https://jsonplaceholder.typicode.com/posts");
         String content = page.content();
-        assertTrue(content.contains("{") && content.contains("userId"), "Expected JSON data in content");
         Logger.log(
                 content.contains("{") && content.contains("userId") 
                         ? "Test T002_JPH_UI_Test.checkPageTitle passed"
                         : "Test T002_JPH_UI_Test.checkPageTitle failed"
                 );
+        assertTrue(content.contains("{") && content.contains("userId"), "Expected JSON data in content");
     }
 }
