@@ -21,7 +21,7 @@ public class ExtentTestNGReporter implements ITestListener {
 
             final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
             final ExtentSparkReporter reporter = new ExtentSparkReporter(
-                    String.format("test-output/reports/ExtentReport-%s.html", dtf.format(now)));
+                    String.format("reports/ExtentReport-%s.html", dtf.format(now)));
             reporter.loadXMLConfig("src/test/resources/extent-config.xml");
 
             extent = new ExtentReports();

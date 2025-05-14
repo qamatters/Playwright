@@ -5,6 +5,8 @@
         <listener class-name="listeners.ExtentTestNGReporter" />
     </listeners>
     <test name="test">
+        <parameter name="browser" value="chrome"/>
+        <parameter name="headless" value="true"/>
         <classes>
             <class name="tests.playwright.T001_JPH_API_Test"></class>
             <class name="tests.playwright.T002_JPH_UI_Test"></class>

@@ -17,10 +17,21 @@ public class T002_JPH_UI_Test {
     Page page;
 
     @BeforeClass
-    static void setupAll() {
+    @Parameters({"browser","headless"})
+    static void setupAll(String b,String h) {
+        // read browser name from CLI else from the Test suite property
+        String selectedBrowser = System.getProperty("browser",b);
+        Boolean headless = System.getProperty("browser",h) == "true";
         System.out.println("Testing class T002_JPH_UI_Test");
+        System.out.println(String.format("Using browser engine %s with headless=%s", selectedBrowser,headless));
         playwright = Playwright.create();
-        browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(true));
+        if (selectedBrowser.contains("firefox")){
+            browser = playwright.firefox().launch(new BrowserType.LaunchOptions().setHeadless(headless));
+        }else if (selectedBrowser.contains("safari")){
+            browser = playwright.webkit().launch(new BrowserType.LaunchOptions().setHeadless(headless));
+        }else{ // for chromium, chrome & edge
+            browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(headless));
+        }
     }
 
     @BeforeMethod
