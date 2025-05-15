@@ -37,7 +37,7 @@ The following tools were used in this project:
 
 - [Java](https://www.java.com/en/)
 - [Maven](https://maven.apache.org/)
-- [Selenium](https://playwright.dev/)
+- [Playwright](https://playwright.dev/)
 
 ## :question: How to use
 
@@ -52,6 +52,9 @@ $ cd Mocker
 
 # Run all tests
 $ mvn test
+
+# Change browser & toggle headless mode
+$ mvn test -Dbrowser=<chrome|firefox|safari> -Dheadless=<true|false>
 
 # Run a single test
 $ mvn test -Dtest="<TestName>"
