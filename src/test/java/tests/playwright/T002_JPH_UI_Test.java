@@ -21,7 +21,8 @@ public class T002_JPH_UI_Test {
     static void setupAll(String b,String h) {
         // read browser name from CLI else from the Test suite property
         String selectedBrowser = System.getProperty("browser",b);
-        Boolean headless = System.getProperty("headless",h) == "true";
+        Boolean headless = System.getProperty("headless",h).contains("true");
+        System.out.println(headless);
         System.out.println("Testing class T002_JPH_UI_Test");
         System.out.println(String.format("Using browser engine %s with headless=%s", selectedBrowser,headless));
         playwright = Playwright.create();
