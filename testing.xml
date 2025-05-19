@@ -7,6 +7,7 @@
     <test name="test">
         <parameter name="browser" value="chrome"/>
         <parameter name="headless" value="true"/>
+        <parameter name="logMode" value="file"/>
         <classes>
             <class name="tests.playwright.T001_JPH_API_Test"></class>
             <class name="tests.playwright.T002_JPH_UI_Test"></class>
