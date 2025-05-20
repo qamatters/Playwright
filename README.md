@@ -18,52 +18,135 @@
   <img alt="Visitors" src="https://visitor-badge.laobi.icu/badge?page_id=khushaljangid/Maven-test-repo&format=true">
 </p>
 
-<p align="center">
-  <a href="#dart-about">About</a> &#xa0; | &#xa0; 
-  <a href="#rocket-technologies">Technologies</a> &#xa0; | &#xa0;
-  <a href="#question-how-to-use">How to use</a> &#xa0; | &#xa0;
-  <a href="#white_check_mark-requirements">Requirements</a> &#xa0; | &#xa0;
-</p>
+## Index
+
+- [About](#about)
+- [Project Structure](#project-structure)
+- [Features](#features)
+- [Technologies](#technologies)
+- [Requirements](#requirements)
+- [How to use](#how-to-use)
+  - [Setup](#setup)
+  - [Running Tests](#running-tests)
+  - [Test Configuration](#test-configuration)
+  - [Output](#output)
+- [Customization](#customization)
 
 <br>
 
-## :dart: About
+## About
 
-A simple mock testing project based on Playwright and TestNG in Java
+Mocker is a simple mock testing project based on [Playwright](https://playwright.dev/) and [TestNG](https://testng.org/) in Java. It demonstrates API and UI testing, logging, reporting, and email notifications.
 
-## :rocket: Technologies
+## Project Structure
+
+```
+.
+├── pom.xml
+├── testing.xml
+├── README.md
+├── src/
+│   ├── main/
+│   └── test/
+│       ├── java/
+│       │   ├── listeners/
+│       │   │   └── ExtentTestNGReporter.java
+│       │   ├── tests/
+│       │   │   └── playwright/
+│       │   │       ├── T001_JPH_API_Test.java
+│       │   │       └── T002_JPH_UI_Test.java
+│       │   └── utils/
+│       │       ├── EmailClient.java
+│       │       ├── EmailReportBuilder.java
+│       │       ├── FileLogger.java
+│       │       ├── Logger.java
+│       │       └── enums/
+│       │           ├── BrowserEngine.java
+│       │           └── LogMode.java
+│       └── resources/
+│           └── extent-config.xml
+├── logs/
+├── reports/
+└── test-output/
+```
+
+## Features
+
+- **API and UI Testing**: Uses Playwright for both API and browser-based UI tests.
+- **TestNG Integration**: Test lifecycle and parameterization via TestNG.
+- **Logging**: Custom logging to console and files ([`utils.Logger`](src/test/java/utils/Logger.java), [`utils.FileLogger`](src/test/java/utils/FileLogger.java)).
+- **Reporting**: Generates HTML reports using ExtentReports ([`listeners.ExtentTestNGReporter`](src/test/java/listeners/ExtentTestNGReporter.java)).
+- **Email Notifications**: Sends test summary and attaches reports via email ([`utils.EmailClient`](src/test/java/utils/EmailClient.java)).
+- **Configurable**: Supports browser selection, headless mode, and log mode via CLI or suite parameters.
+
+
+## Technologies
 
 The following tools were used in this project:
 
-- [Java](https://www.java.com/en/)
+- [Java 21+](https://www.java.com/en/)
 - [Maven](https://maven.apache.org/)
 - [Playwright](https://playwright.dev/)
 
-## :question: How to use
+## Requirements
+
+Before starting, you need to have [Git](https://git-scm.com), [Java](https://www.java.com/en/) and [Maven](https://maven.apache.org/) installed to clone and build the Project.
+
+
+## How to use
 
 Follow these steps to run the project:
 
-```bash
-# Clone this project
-$ git clone https://github.com/KhushalJangid/Mocker.git
+### Setup
 
-# Access
-$ cd Mocker
+1. **Clone the repository:**
+    ```sh
+    git clone https://github.com/KhushalJangid/Mocker.git
+    cd Mocker
+    ```
 
-# Run all tests
-$ mvn test
+2. **Configure SMTP for email reports:**
+    - Create `src/test/resources/smtp.properties` with your SMTP settings:
+      ```
+      username=your_email@example.com
+      password=your_password
+      host=smtp.example.com
+      port=587
+      ```
 
-# Change browser & toggle headless mode
-$ mvn test -Dbrowser=<chrome|firefox|safari> -Dheadless=<true|false>
+### Running Tests
 
-# Run a single test
-$ mvn test -Dtest="<TestName>"
+- **Run all tests:**
+    ```sh
+    mvn test
+    ```
 
-```
+- **Change browser or headless mode:**
+    ```sh
+    mvn test -Dbrowser=firefox -Dheadless=false
+    ```
 
-## :white_check_mark: Requirements
+- **Run a specific test class:**
+    ```sh
+    mvn test -Dtest="T001_JPH_API_Test"
 
-Before starting, you need to have [Git](https://git-scm.com), [Java](https://www.java.com/en/) and [Maven](https://maven.apache.org/) installed to clone and build the Project.
+### Test Configuration
+
+- TestNG suite file: [testing.xml](testing.xml)
+- Logging modes: `All`, `Console`, `File`, `None`
+- Browser engines: `Chromium`, `Firefox`, `Webkit`
+
+### Output
+
+- **Logs:** `logs/test-<timestamp>.log`
+- **Reports:** `reports/ExtentReport-<timestamp>.html`
+- **Email:** Sent after test suite completion (if SMTP is configured)
+
+## Customization
+
+- **Add new tests:** Place them in `src/test/java/tests/playwright/`.
+- **Modify report appearance:** Edit [`extent-config.xml`](src/test/resources/extent-config.xml).
+- **Change email recipients:** Update `username` in `smtp.properties`.
 
 &#xa0;
 
