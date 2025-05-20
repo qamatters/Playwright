@@ -1,6 +1,8 @@
 package utils;
 
 import org.testng.*;
+
+import java.time.Duration;
 import java.util.*;
 
 public class EmailReportBuilder {
@@ -31,7 +33,7 @@ public class EmailReportBuilder {
         html.append("<h3>Test Details</h3>");
         html.append("<table border='1' cellpadding='8' cellspacing='0' style='border-collapse:collapse;'>");
         html.append("<tr style='background-color:#f2f2f2;'>");
-        html.append("<th>Test Case</th><th>Status</th><th>Duration (ms)</th></tr>");
+        html.append("<th>Test Case</th><th>Status</th><th>Duration (sec)</th></tr>");
 
         List<ITestResult> allResults = new ArrayList<>();
         allResults.addAll(context.getPassedTests().getAllResults());
@@ -67,7 +69,7 @@ public class EmailReportBuilder {
             html.append("<tr>");
             html.append("<td>").append(testName).append("</td>");
             html.append("<td style='color:").append(color).append(";'>").append(status).append("</td>");
-            html.append("<td>").append(duration).append("</td>");
+            html.append("<td>").append(Duration.ofMillis(duration).toSeconds()).append("</td>");
             html.append("</tr>");
         }
 

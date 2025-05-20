@@ -1,6 +1,6 @@
-package tests.playwright;
+package tests.UI;
 
-import com.microsoft.playwright.*;
+// import com.microsoft.playwright.*;
 
 import org.testng.annotations.*;
 
@@ -8,55 +8,11 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
 import utils.Logger;
-import utils.enums.BrowserEngine;
+// import utils.enums.BrowserEngine;
 import utils.enums.LogMode;;
 
-public class T002_JPH_UI_Test {
-
-    static Playwright playwright;
-    static Browser browser;
-    BrowserContext context;
-    Page page;
-
-    @BeforeClass
-    @Parameters({"browser","headless","logMode"})
-    static void setupAll(String b,String h,String mode) {
-        // read browser name from CLI else from the Test suite property
-        BrowserEngine selectedBrowser = BrowserEngine.parse(System.getProperty("browser",b));
-        Boolean headless = Boolean.parseBoolean(System.getProperty("headless",h));
-        LogMode l = LogMode.parse(mode);
-        Logger.log("Testing class T002_JPH_UI_Test",l);
-        Logger.log(String.format("Using browser engine %s with headless=%s", selectedBrowser,headless),l);
-        playwright = Playwright.create();
-        if (selectedBrowser == BrowserEngine.Firefox){
-            browser = playwright.firefox().launch(new BrowserType.LaunchOptions().setHeadless(headless));
-        }else if (selectedBrowser == BrowserEngine.Webkit){
-            browser = playwright.webkit().launch(new BrowserType.LaunchOptions().setHeadless(headless));
-        }else{ // for chromium, chrome & edge
-            browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(headless));
-        }
-    }
-
-    @BeforeMethod
-    void setup() {
-        context = browser.newContext();
-        page = context.newPage();
-        Logger.increment_test_number();
-    }
-
-    @AfterMethod
-    void teardown() {
-        context.close();
-    }
-
-    @AfterClass
-    static void teardownAll() {
-        browser.close();
-        playwright.close();
-        System.out.println("Testing class T002_JPH_UI_Test finished");
-
-    }
-
+public class T002_JPH_UI_Test extends BaseUITest {
+    // This class is used to test the JSON Placeholder UI
     @Test
     @Parameters({"logMode"})
     public void checkPageTitle(String mode) {

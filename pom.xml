@@ -38,7 +38,9 @@
                 <version>2.22.0</version>
                 <configuration>
                     <suiteXmlFiles>
-                        <suiteXmlFile>testing.xml</suiteXmlFile>
+                        <suiteXmlFile>testng.xml</suiteXmlFile>
+                        <!-- <suiteXmlFile>pw-ui.xml</suiteXmlFile>
+                        <suiteXmlFile>pw-amzn.xml</suiteXmlFile> -->
                     </suiteXmlFiles>
                 </configuration>
             </plugin>
