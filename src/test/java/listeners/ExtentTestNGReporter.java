@@ -3,6 +3,10 @@ package listeners;
 import com.aventstack.extentreports.*;
 import com.aventstack.extentreports.reporter.ExtentSparkReporter;
 
+import utils.EmailClient;
+import utils.EmailReportBuilder;
+
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -13,6 +17,7 @@ public class ExtentTestNGReporter implements ITestListener {
 
     private static ExtentReports extent;
     private static ThreadLocal<ExtentTest> test = new ThreadLocal<>();
+    private static String reportPath = "";
 
     @Override
     public void onStart(ITestContext context) {
@@ -20,8 +25,8 @@ public class ExtentTestNGReporter implements ITestListener {
             final LocalDateTime now = LocalDateTime.now();
 
             final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
-            final ExtentSparkReporter reporter = new ExtentSparkReporter(
-                    String.format("reports/ExtentReport-%s.html", dtf.format(now)));
+            reportPath = String.format("reports/ExtentReport-%s.html", dtf.format(now));
+            final ExtentSparkReporter reporter = new ExtentSparkReporter(reportPath);
             reporter.loadXMLConfig("src/test/resources/extent-config.xml");
 
             extent = new ExtentReports();
@@ -59,5 +64,13 @@ public class ExtentTestNGReporter implements ITestListener {
     @Override
     public void onFinish(ITestContext context) {
         extent.flush();
+        try{
+        String htmlReportBody = EmailReportBuilder.generateHtmlReportBody(context);
+        EmailClient.sendEmailWithReport(htmlReportBody,reportPath);
+        } catch (FileNotFoundException e){
+            e.printStackTrace();
+        } catch (IOException e){
+            e.printStackTrace();
+        }
     }
 }

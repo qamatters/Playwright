@@ -36,8 +36,11 @@ build/
 .vscode/
 .idea/
 .mvn/
+test-output/
+test-output/*.html
 logs/
 reports/
+*.properties
 
 ### Mac OS ###
 .DS_Store
