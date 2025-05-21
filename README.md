@@ -43,7 +43,10 @@ Mocker is a simple mock testing project based on [Playwright](https://playwright
 ```
 .
 ├── pom.xml
-├── testing.xml
+├── testng.xml
+├── pw-api.xml
+├── pw-ui.xml
+├── pw-amzn.xml
 ├── README.md
 ├── src/
 │   ├── main/
@@ -52,9 +55,11 @@ Mocker is a simple mock testing project based on [Playwright](https://playwright
 │       │   ├── listeners/
 │       │   │   └── ExtentTestNGReporter.java
 │       │   ├── tests/
-│       │   │   └── playwright/
+│       │   │   └── Api/
 │       │   │       ├── T001_JPH_API_Test.java
-│       │   │       └── T002_JPH_UI_Test.java
+│       │   │   └── UI/
+│       │   │       ├── T002_JPH_UI_Test.java
+│       │   │       └── T003_Amazon _UI_Test.java
 │       │   └── utils/
 │       │       ├── EmailClient.java
 │       │       ├── EmailReportBuilder.java
@@ -65,6 +70,7 @@ Mocker is a simple mock testing project based on [Playwright](https://playwright
 │       │           └── LogMode.java
 │       └── resources/
 │           └── extent-config.xml
+│           └── smtp.properties 
 ├── logs/
 ├── reports/
 └── test-output/
