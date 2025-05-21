@@ -111,7 +111,7 @@ Follow these steps to run the project:
     cd Mocker
     ```
 
-2. **Configure SMTP for email reports:**
+2. **Configure SMTP for email reports (Optional):**
     - Create `src/test/resources/smtp.properties` with your SMTP settings:
       ```
       username=your_email@example.com

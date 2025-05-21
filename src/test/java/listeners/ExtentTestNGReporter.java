@@ -65,12 +65,13 @@ public class ExtentTestNGReporter implements ITestListener {
     public void onFinish(ITestContext context) {
         extent.flush();
         try{
-        String htmlReportBody = EmailReportBuilder.generateHtmlReportBody(context);
-        EmailClient.sendEmailWithReport(htmlReportBody,reportPath);
+            String htmlReportBody = EmailReportBuilder.generateHtmlReportBody(context);
+            EmailClient.sendEmailWithReport(htmlReportBody,reportPath);
         } catch (FileNotFoundException e){
-            e.printStackTrace();
+            System.out.println("smtp.properties file not found in src/test/resources, skipping email sending");
         } catch (IOException e){
             e.printStackTrace();
+            System.out.println("IO Error reading smtp.properties file, skipping email sending");
         }
     }
 }
