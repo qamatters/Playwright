@@ -1,10 +1,7 @@
 package tests.Api;
 
 import com.microsoft.playwright.*;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Parameters;
+import org.testng.annotations.*;
 import utils.Logger;
 import utils.enums.LogMode;
 
@@ -16,12 +13,11 @@ public abstract class BaseTest {
     @BeforeClass(alwaysRun = true)
     @Parameters({"logMode","url"})
     public void baseSetup(String mode,String url) {
-        this.logMode = LogMode.parse(mode);
+        this.logMode = LogMode.parse(System.getProperty("logMode",mode));
         Logger.log("Testing class " + this.getClass().getSimpleName(),logMode);
         if (playwright == null) playwright = Playwright.create();
         if (api == null)  api = playwright.request().newContext(new APIRequest.NewContextOptions()
                 .setBaseURL(url));
-        logMode = LogMode.parse(mode);
     }
 
     @AfterClass(alwaysRun = true)

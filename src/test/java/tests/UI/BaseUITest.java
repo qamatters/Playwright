@@ -20,10 +20,10 @@ public abstract class BaseUITest {
     @Parameters({"logMode", "url", "browser", "headless"})
     public void baseSetup(String mode, String url, String browserType, String headless) {
         playwright = Playwright.create();
-        this.logMode = LogMode.parse(mode);
+        this.logMode = LogMode.parse(System.getProperty("logMode",mode));
         this.url = url;
-        this.browserType = BrowserEngine.parse(browserType);
-        this.headless = Boolean.parseBoolean(headless);
+        this.browserType = BrowserEngine.parse(System.getProperty("browser",browserType));
+        this.headless = Boolean.parseBoolean(System.getProperty("headless",headless));
         Logger.log("Testing class " + this.getClass().getSimpleName(),logMode);
 
         BrowserType.LaunchOptions options = new BrowserType.LaunchOptions().setHeadless(this.headless);
