@@ -32,7 +32,7 @@ public class ExtentTestNGReporter implements ITestListener {
 
             extent = new ExtentReports();
             extent.attachReporter(reporter);
-            extent.setSystemInfo("Tester", System.getProperty("user.name","Khushal Jangid"));
+            extent.setSystemInfo("Tester", System.getProperty("user.name","qamaters"));
             extent.setSystemInfo("Operating System", System.getProperty("os.name","Unknown"));
             extent.setSystemInfo("OS Version", System.getProperty("os.version","Unknown"));
             extent.setSystemInfo("Architecture", System.getProperty("os.arch","Unknown"));

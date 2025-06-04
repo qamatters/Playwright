@@ -16,7 +16,7 @@ public class EmailReportBuilder {
         StringBuilder html = new StringBuilder();
 
         html.append("<html><body>");
-        html.append("<h2 style='color:#2E86C1;'>Mocker Test Report</h2>");
+        html.append("<h2 style='color:#2E86C1;'>Playwright Test Report</h2>");
 
         // Summary
         html.append("<h3>Test Summary</h3>");
