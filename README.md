@@ -90,8 +90,8 @@ Follow these steps to run the project:
 
 1. **Clone the repository:**
     ```sh
-    git clone https://github.com/KhushalJangid/Mocker.git
-    cd Mocker
+    https://github.com/qamatters/Playwright.git
+    cd Playwright
     ```
 
 2. **Configure SMTP for email reports (Optional):**
