@@ -1,28 +1,29 @@
 package utils;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.Properties;
-
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
 import javax.mail.*;
-import javax.mail.internet.*;
-import javax.activation.*;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+import java.io.*;
+import java.util.Properties;
 
 public class EmailClient {
 
 
-    public static void sendEmailWithReport(String htmlBody, String reportPath) throws IOException, FileNotFoundException{
+    public static void sendEmailWithReport(String htmlBody, String reportPath,
+                                           String username, String password) throws IOException, FileNotFoundException {
+
 
         final Properties props = new Properties();
         props.load(new FileInputStream(new File("src/test/resources/smtp.properties")));
 
         // Email config
-        String to = props.getProperty("username");
-        String from = props.getProperty("username");
+        String to = username; // Using passed username
+        String from = username;
         String host = props.getProperty("host");
 
         // Get system properties
@@ -32,22 +33,19 @@ public class EmailClient {
         properties.setProperty("mail.smtp.auth", "true");
         properties.setProperty("mail.smtp.starttls.enable", "true");
 
-
-        // Authenticate
+        // Authenticate using passed credentials
         Session session = Session.getInstance(properties, new Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(
-                    props.getProperty("username"), 
-                    props.getProperty("password")
-                    );
+                return new PasswordAuthentication(username, password);
             }
         });
+
 
         try {
             MimeMessage message = new MimeMessage(session);
             message.setFrom(new InternetAddress(from));
             message.setRecipient(Message.RecipientType.TO, new InternetAddress(to));
-            message.setSubject("Mocker Test Report");
+            message.setSubject("Test Report");
 
             Multipart multipart = new MimeMultipart();
 
@@ -81,6 +79,14 @@ public class EmailClient {
     }
 
     private static void dumpHtmlToFile(String html, String filePath) {
+       File file = new File(filePath);
+       if (!file.exists()) {
+           try {
+               file.createNewFile();
+           } catch (IOException e) {
+               e.printStackTrace();
+           }
+       }
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
             writer.write(html);
             System.out.println("✅ Email body saved to: " + filePath);

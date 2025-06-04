@@ -1,8 +1,11 @@
 package listeners;
 
-import com.aventstack.extentreports.*;
+import com.aventstack.extentreports.ExtentReports;
+import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.reporter.ExtentSparkReporter;
-
+import org.testng.ITestContext;
+import org.testng.ITestListener;
+import org.testng.ITestResult;
 import utils.EmailClient;
 import utils.EmailReportBuilder;
 
@@ -10,8 +13,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-
-import org.testng.*;
 
 public class ExtentTestNGReporter implements ITestListener {
 
@@ -66,7 +67,15 @@ public class ExtentTestNGReporter implements ITestListener {
         extent.flush();
         try{
             String htmlReportBody = EmailReportBuilder.generateHtmlReportBody(context);
-            EmailClient.sendEmailWithReport(htmlReportBody,reportPath);
+            String username = System.getProperty("smtp.username");
+            String password = System.getProperty("smtp.password");
+            if (username == null || password == null){
+                System.out.println("smtp.username or smtp.password not set in system properties, skipping email sending");
+            } else {
+                EmailClient.sendEmailWithReport(htmlReportBody, reportPath, username, password);
+            }
+
+
         } catch (FileNotFoundException e){
             System.out.println("smtp.properties file not found in src/test/resources, skipping email sending");
         } catch (IOException e){
