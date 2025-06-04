@@ -99,8 +99,6 @@ Follow these steps to run the project:
       ```
       username=your_email@example.com
       password=your_password
-      host=smtp.example.com
-      port=587
       ```
 
 ### Running Tests
