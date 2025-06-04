@@ -1,4 +1,22 @@
-<h1 align="center">Playwright</h1>
+<h1 align="center">Mocker</h1>
+
+<p align="center">
+  <img alt="Github top language" src="https://img.shields.io/github/languages/top/KhushalJangid/Maven-test-repo?color=56BEB8">
+
+  <img alt="Github language count" src="https://img.shields.io/github/languages/count/KhushalJangid/Maven-test-repo?color=56BEB8">
+
+  <img alt="Repository size" src="https://img.shields.io/github/repo-size/KhushalJangid/Maven-test-repo?color=56BEB8">
+
+  <img alt="License" src="https://img.shields.io/github/license/KhushalJangid/Maven-test-repo?color=56BEB8">
+
+  <img alt="Github issues" src="https://img.shields.io/github/issues/KhushalJangid/Maven-test-repo?color=56BEB8" />
+
+  <img alt="Github forks" src="https://img.shields.io/github/forks/KhushalJangid/Maven-test-repo?color=56BEB8" />
+
+  <img alt="Github stars" src="https://img.shields.io/github/stars/KhushalJangid/Maven-test-repo?color=56BEB8" />
+
+  <img alt="Visitors" src="https://visitor-badge.laobi.icu/badge?page_id=khushaljangid/Maven-test-repo&format=true">
+</p>
 
 ## Index
 
@@ -18,7 +36,7 @@
 
 ## About
 
-Playwright is a simple testing project based on [Playwright](https://playwright.dev/) and [TestNG](https://testng.org/) in Java. It demonstrates API and UI testing, logging, reporting, and email notifications.
+Mocker is a simple mock testing project based on [Playwright](https://playwright.dev/) and [TestNG](https://testng.org/) in Java. It demonstrates API and UI testing, logging, reporting, and email notifications.
 
 ## Project Structure
 
