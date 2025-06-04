@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="JsonPUISuite" verbose="5">
+    <listeners>
+        <listener class-name="listeners.ExtentTestNGReporter" />
+    </listeners>
     <test name="JsonP-UI-Test">
         <parameter name="browser" value="chrome"/>
         <parameter name="headless" value="true"/>
