@@ -1,15 +1,15 @@
 package tests.UI;
+
 import org.testng.annotations.Test;
+import utils.Logger;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
-import utils.Logger;
-
 public class T002_JPH_UI_Test extends BaseUITest {
     // This class is used to test the JSON Placeholder UI
     @Test
-    public void checkPageTitle(String mode) {
+    public void checkPageTitle() {
         Logger.formattedLog("Testing T002_JPH_UI_Test.checkPageTitle",logMode);
         page.navigate("https://jsonplaceholder.typicode.com/");
         Logger.formattedLog(
