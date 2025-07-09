@@ -6,7 +6,7 @@
     </listeners>
     <test name="Amazon-UI-Test">
         <parameter name="browser" value="chrome"/>
-        <parameter name="headless" value="true"/>
+        <parameter name="headless" value="false"/>
         <parameter name="logMode" value="file"/>
         <parameter name="url" value="https://www.amazon.com"/>
         <classes>
