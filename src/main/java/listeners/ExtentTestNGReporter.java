@@ -21,30 +21,36 @@ public class ExtentTestNGReporter implements ITestListener {
     private static ExtentReports extent;
     protected static ThreadLocal<ExtentTest> test = new ThreadLocal<>();
     private static String reportPath = "";
-    private static Page page; // Playwright page for screenshot capture
+    private static Page page;
 
-    // ===================== TESTNG LISTENER METHODS =====================
     @Override
     public void onStart(ITestContext context) {
         try {
             LocalDateTime now = LocalDateTime.now();
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
+
+            // Timestamped report
             reportPath = String.format("reports/ExtentReport-%s.html", dtf.format(now));
-            String defaultReport = "reports/ExtentReport.html"; // always overwritten
+            ExtentSparkReporter timestampedReporter = new ExtentSparkReporter(reportPath);
+            timestampedReporter.loadXMLConfig("src/test/resources/extent-config.xml");
+            timestampedReporter.config().setOfflineMode(true); // <-- embed CSS/JS for Jenkins
 
-            ExtentSparkReporter reporter = new ExtentSparkReporter(reportPath);
-            reporter.loadXMLConfig("src/test/resources/extent-config.xml");
-
-            // Default reporter
+            // Default report (always overwritten)
+            String defaultReport = "reports/ExtentReport.html";
             ExtentSparkReporter defaultReporter = new ExtentSparkReporter(defaultReport);
             defaultReporter.loadXMLConfig("src/test/resources/extent-config.xml");
+            defaultReporter.config().setOfflineMode(true); // <-- embed CSS/JS for Jenkins
 
+            // Initialize ExtentReports and attach both reporters
             extent = new ExtentReports();
-            extent.attachReporter(reporter,defaultReporter);
+            extent.attachReporter(timestampedReporter, defaultReporter);
+
+            // System info
             extent.setSystemInfo("Tester", System.getProperty("user.name", "qamaters"));
             extent.setSystemInfo("Operating System", System.getProperty("os.name", "Unknown"));
             extent.setSystemInfo("OS Version", System.getProperty("os.version", "Unknown"));
             extent.setSystemInfo("Architecture", System.getProperty("os.arch", "Unknown"));
+
         } catch (IOException e) {
             System.err.println("Failed to initialize ExtentReports: " + e);
         }
@@ -63,7 +69,7 @@ public class ExtentTestNGReporter implements ITestListener {
 
     @Override
     public void onTestSuccess(ITestResult result) {
-        // Do nothing here; PASS is finalized in @AfterMethod
+        // nothing special
     }
 
     @Override
@@ -71,13 +77,9 @@ public class ExtentTestNGReporter implements ITestListener {
         ExtentTest t = test.get();
         if (t != null) {
             Throwable th = result.getThrowable();
-            if (th != null) {
-                t.fail("Test failed due to exception: " + th.getMessage());
-            } else {
-                t.fail("Test failed with unknown error");
-            }
+            if (th != null) t.fail("Test failed due to exception: " + th.getMessage());
+            else t.fail("Test failed with unknown error");
 
-            // Try attaching screenshot
             try {
                 String path = ScreenshotUtil.captureScreenshot(result.getMethod().getMethodName() + "_failure");
                 t.fail("Failure screenshot",
@@ -86,8 +88,6 @@ public class ExtentTestNGReporter implements ITestListener {
                 t.warning("Could not attach failure screenshot: " + e.getMessage());
             }
         }
-
-        // Mark as already logged to avoid duplicate logging from @AfterMethod
         result.setAttribute("extentLogged", true);
     }
 
@@ -118,19 +118,8 @@ public class ExtentTestNGReporter implements ITestListener {
     }
 
     // ===================== PAGE ACCESSORS =====================
-    public static void setPage(Page p) {
-        page = p;
-    }
-
-    public static Page getPage() {
-        return page;
-    }
-
-    public static ExtentTest getTest() {
-        return test.get();
-    }
-
-    public static String getReportPath() {
-        return reportPath;
-    }
+    public static void setPage(Page p) { page = p; }
+    public static Page getPage() { return page; }
+    public static ExtentTest getTest() { return test.get(); }
+    public static String getReportPath() { return reportPath; }
 }

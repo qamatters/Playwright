@@ -3,27 +3,41 @@
   <configuration>
     <!-- report theme -->
     <theme>dark</theme>
-  
+
+    <!-- encoding -->
     <encoding>UTF-8</encoding>
-    
-    <protocol>http</protocol>
-    
-    <!-- title of the document -->
-    <documentTitle>[Playwright]—A Mock testing project based on Playwright and testNG</documentTitle>
-    
-    <!-- report name - displayed at top-nav -->
+
+    <!-- offline mode to embed CSS/JS -->
+    <protocol>offline</protocol>
+
+    <!-- document title -->
+    <documentTitle>[Playwright] — A Mock Testing Project</documentTitle>
+
+    <!-- report name displayed on top -->
     <reportName>Mocker Report</reportName>
-    
-    <!-- report headline - displayed at top-nav, after reportHeadline -->
+
+    <!-- report headline displayed below report name -->
     <reportHeadline>POM Report</reportHeadline>
-    
-    <!-- global date format override -->
-    <!-- defaults to yyyy-MM-dd -->
-     <dateFormat>dd-MM-yyyy</dateFormat>
-    
-    <!-- global time format override -->
-    <!-- defaults to HH:mm:ss -->
+
+    <!-- global date & time formats -->
+    <dateFormat>dd-MM-yyyy</dateFormat>
     <timeFormat>HH:mm:ss</timeFormat>
-    
+
+    <!-- Font and styling enhancements -->
+    <themeSettings>
+      <!-- Table header background color -->
+      <tableHeaderBackgroundColor>#1f1f1f</tableHeaderBackgroundColor>
+      <!-- Table header text color -->
+      <tableHeaderTextColor>#ffffff</tableHeaderTextColor>
+      <!-- Table row alternating colors for better readability -->
+      <tableRowOddBackgroundColor>#2a2a2a</tableRowOddBackgroundColor>
+      <tableRowEvenBackgroundColor>#242424</tableRowEvenBackgroundColor>
+      <!-- Log colors for better contrast -->
+      <logPassColor>#00ff00</logPassColor>
+      <logFailColor>#ff4d4d</logFailColor>
+      <logSkipColor>#ffcc00</logSkipColor>
+      <fontFamily>Arial, sans-serif</fontFamily>
+      <fontSize>14px</fontSize>
+    </themeSettings>
   </configuration>
 </extentreports>
