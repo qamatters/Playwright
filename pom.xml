@@ -42,7 +42,7 @@
                 <configuration>
                     <!-- use system property for dynamic TestNG suite -->
                     <suiteXmlFiles>
-                        <suiteXmlFile>${suiteXmlFile}</suiteXmlFile>
+                        <suiteXmlFile>${surefire.suiteXmlFiles}</suiteXmlFile>
                     </suiteXmlFiles>
                 </configuration>
             </plugin>
