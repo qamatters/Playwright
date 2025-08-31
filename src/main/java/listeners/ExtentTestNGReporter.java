@@ -69,7 +69,7 @@ public class ExtentTestNGReporter implements ITestListener {
 
     @Override
     public void onTestSuccess(ITestResult result) {
-        // nothing special
+        test.get().pass("Test passed");
     }
 
     @Override
