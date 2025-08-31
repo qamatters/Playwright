@@ -44,6 +44,8 @@
                     <suiteXmlFiles>
                         <suiteXmlFile>${surefire.suiteXmlFiles}</suiteXmlFile>
                     </suiteXmlFiles>
+                    <forkCount>0</forkCount> <!-- disables fork, so listeners work -->
+                    <reuseForks>false</reuseForks>
                 </configuration>
             </plugin>
         </plugins>

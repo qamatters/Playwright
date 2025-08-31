@@ -10,6 +10,7 @@ import org.testng.ITestResult;
 import utils.EmailClient;
 import utils.EmailReportBuilder;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -26,6 +27,17 @@ public class ExtentTestNGReporter implements ITestListener {
     @Override
     public void onStart(ITestContext context) {
         try {
+            // Ensure reports directory exists
+            File reportsDir = new File("reports");
+            if (!reportsDir.exists()) {
+                boolean created = reportsDir.mkdirs();
+                if (created) {
+                    System.out.println("Created reports directory: " + reportsDir.getAbsolutePath());
+                } else {
+                    System.err.println("Failed to create reports directory: " + reportsDir.getAbsolutePath());
+                }
+            }
+
             LocalDateTime now = LocalDateTime.now();
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
 
@@ -33,13 +45,13 @@ public class ExtentTestNGReporter implements ITestListener {
             reportPath = String.format("reports/ExtentReport-%s.html", dtf.format(now));
             ExtentSparkReporter timestampedReporter = new ExtentSparkReporter(reportPath);
             timestampedReporter.loadXMLConfig("src/test/resources/extent-config.xml");
-            timestampedReporter.config().setOfflineMode(true); // <-- embed CSS/JS for Jenkins
+            timestampedReporter.config().setOfflineMode(true); // Embed CSS/JS for Jenkins
 
             // Default report (always overwritten)
             String defaultReport = "reports/ExtentReport.html";
             ExtentSparkReporter defaultReporter = new ExtentSparkReporter(defaultReport);
             defaultReporter.loadXMLConfig("src/test/resources/extent-config.xml");
-            defaultReporter.config().setOfflineMode(true); // <-- embed CSS/JS for Jenkins
+            defaultReporter.config().setOfflineMode(true); // Embed CSS/JS for Jenkins
 
             // Initialize ExtentReports and attach both reporters
             extent = new ExtentReports();
