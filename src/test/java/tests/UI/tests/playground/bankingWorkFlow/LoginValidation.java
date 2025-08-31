@@ -16,11 +16,11 @@ public class LoginValidation extends BaseUITest {
         page.navigate("https://qamatters.github.io/demoautomationWebSite/WorkFlows/Banking/index.html");
         Logger.formattedLog("Bank Demo app title: " + page.title(),this.logMode);
         ReportUtil.logInfo("Title of the App is :" + page.title());
-        ReportUtil.verifyTitle("Bank Login 1", "Validate title");
+        ReportUtil.verifyTitle("Bank Login", "Validate title");
         loginToBankApplication.loginToBankApplication();
         String userName = dashboard.getUserName();
         ReportUtil.logInfo("Logged in User Name is " + userName);
-        ReportUtil.verifyText(userName, "deepak","Validate logged in User Name");
+        ReportUtil.verifyText(userName, "John Doe","Validate logged in User Name");
         Logger.formattedLog("Bank Demo app title: " + userName,this.logMode);
     }
 }
