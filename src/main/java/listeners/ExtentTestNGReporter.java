@@ -16,11 +16,12 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ExtentTestNGReporter implements ITestListener {
 
     private static ExtentReports extent;
-    protected static ThreadLocal<ExtentTest> test = new ThreadLocal<>();
+    private static ConcurrentHashMap<Long, ExtentTest> testsMap = new ConcurrentHashMap<>();
     private static String reportPath = "";
     private static Page page;
 
@@ -29,14 +30,7 @@ public class ExtentTestNGReporter implements ITestListener {
         try {
             // Ensure reports directory exists
             File reportsDir = new File("reports");
-            if (!reportsDir.exists()) {
-                boolean created = reportsDir.mkdirs();
-                if (created) {
-                    System.out.println("Created reports directory: " + reportsDir.getAbsolutePath());
-                } else {
-                    System.err.println("Failed to create reports directory: " + reportsDir.getAbsolutePath());
-                }
-            }
+            if (!reportsDir.exists()) reportsDir.mkdirs();
 
             LocalDateTime now = LocalDateTime.now();
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
@@ -45,15 +39,15 @@ public class ExtentTestNGReporter implements ITestListener {
             reportPath = String.format("reports/ExtentReport-%s.html", dtf.format(now));
             ExtentSparkReporter timestampedReporter = new ExtentSparkReporter(reportPath);
             timestampedReporter.loadXMLConfig("src/test/resources/extent-config.xml");
-            timestampedReporter.config().setOfflineMode(true); // Embed CSS/JS for Jenkins
+            timestampedReporter.config().setOfflineMode(true);
 
             // Default report (always overwritten)
             String defaultReport = "reports/ExtentReport.html";
             ExtentSparkReporter defaultReporter = new ExtentSparkReporter(defaultReport);
             defaultReporter.loadXMLConfig("src/test/resources/extent-config.xml");
-            defaultReporter.config().setOfflineMode(true); // Embed CSS/JS for Jenkins
+            defaultReporter.config().setOfflineMode(true);
 
-            // Initialize ExtentReports and attach both reporters
+            // Initialize ExtentReports
             extent = new ExtentReports();
             extent.attachReporter(timestampedReporter, defaultReporter);
 
@@ -70,34 +64,37 @@ public class ExtentTestNGReporter implements ITestListener {
 
     @Override
     public void onTestStart(ITestResult result) {
-        ExtentTest extentTest = extent.createTest(result.getMethod().getMethodName());
-        test.set(extentTest);
-        test.get().info("Test started at: " + LocalDateTime.now());
+        ExtentTest test = extent.createTest(result.getMethod().getMethodName());
+        long threadId = Thread.currentThread().getId();
+        testsMap.put(threadId, test);
+
+        test.info("Test started at: " + LocalDateTime.now());
 
         if (result.getParameters().length > 0) {
-            test.get().info("Test parameters: " + Arrays.toString(result.getParameters()));
+            test.info("Test parameters: " + Arrays.toString(result.getParameters()));
         }
     }
 
     @Override
     public void onTestSuccess(ITestResult result) {
-        test.get().pass("Test passed");
+        ExtentTest test = testsMap.get(Thread.currentThread().getId());
+        if (test != null) test.pass("Test passed");
     }
 
     @Override
     public void onTestFailure(ITestResult result) {
-        ExtentTest t = test.get();
-        if (t != null) {
+        ExtentTest test = testsMap.get(Thread.currentThread().getId());
+        if (test != null) {
             Throwable th = result.getThrowable();
-            if (th != null) t.fail("Test failed due to exception: " + th.getMessage());
-            else t.fail("Test failed with unknown error");
+            if (th != null) test.fail("Test failed due to exception: " + th.getMessage());
+            else test.fail("Test failed with unknown error");
 
             try {
                 String path = ScreenshotUtil.captureScreenshot(result.getMethod().getMethodName() + "_failure");
-                t.fail("Failure screenshot",
+                test.fail("Failure screenshot",
                         com.aventstack.extentreports.MediaEntityBuilder.createScreenCaptureFromPath(path).build());
             } catch (Exception e) {
-                t.warning("Could not attach failure screenshot: " + e.getMessage());
+                test.warning("Could not attach failure screenshot: " + e.getMessage());
             }
         }
         result.setAttribute("extentLogged", true);
@@ -105,13 +102,14 @@ public class ExtentTestNGReporter implements ITestListener {
 
     @Override
     public void onTestSkipped(ITestResult result) {
-        test.get().skip("Test skipped");
+        ExtentTest test = testsMap.get(Thread.currentThread().getId());
+        if (test != null) test.skip("Test skipped");
     }
 
     @Override
     public void onFinish(ITestContext context) {
         extent.flush();
-        test.remove();
+        testsMap.clear();
 
         try {
             String htmlReportBody = EmailReportBuilder.generateHtmlReportBody(context);
@@ -132,6 +130,6 @@ public class ExtentTestNGReporter implements ITestListener {
     // ===================== PAGE ACCESSORS =====================
     public static void setPage(Page p) { page = p; }
     public static Page getPage() { return page; }
-    public static ExtentTest getTest() { return test.get(); }
+    public static ExtentTest getTest() { return testsMap.get(Thread.currentThread().getId()); }
     public static String getReportPath() { return reportPath; }
 }
