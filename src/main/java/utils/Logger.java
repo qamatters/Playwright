@@ -1,8 +1,9 @@
 package utils;
 
+import utils.enums.LogMode;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import utils.enums.*;
 public class Logger {
     static int test_number = 0;
     static String timestamp = null;

@@ -1,5 +1,6 @@
-package tests.UI;
+package tests.UI.tests.jph;
 
+import base.BaseUITest;
 import org.testng.annotations.Test;
 import utils.Logger;
 

@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="AmazonUISuite" verbose="5">
+<suite name="JsonPUISuite" verbose="5">
     <listeners>
         <listener class-name="listeners.ExtentTestNGReporter" />
     </listeners>
-    <test name="Amazon-UI-Test">
+    <test name="JsonP-UI-Test">
         <parameter name="browser" value="chrome"/>
         <parameter name="headless" value="false"/>
         <parameter name="logMode" value="file"/>
-        <parameter name="url" value="https://www.amazon.com"/>
+        <parameter name="url" value="https://testwithease.blogspot.com/"/>
         <classes>
-            <class name="tests.UI.tests.amazon.T003_Amazon_UI_Test"></class>
+            <class name="tests.UI.tests.blog.LandingPageValidation"></class>
         </classes>
     </test> <!-- Test -->
 </suite> <!-- Suite -->

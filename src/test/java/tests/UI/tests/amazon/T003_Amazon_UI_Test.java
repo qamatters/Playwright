@@ -1,5 +1,6 @@
-package tests.UI;
+package tests.UI.tests.amazon;
 
+import base.BaseUITest;
 import org.testng.Assert;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;

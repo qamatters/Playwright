@@ -10,7 +10,7 @@
         <parameter name="logMode" value="file"/>
         <parameter name="url" value="https://jsonplaceholder.typicode.com"/>
         <classes>
-            <class name="tests.UI.T002_JPH_UI_Test"></class>
+            <class name="tests.UI.tests.jph.T002_JPH_UI_Test"></class>
         </classes>
     </test> <!-- Test -->
 </suite> <!-- Suite -->
