@@ -5,6 +5,7 @@ import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.SelectOption;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -110,6 +111,19 @@ public class DropDownHelper {
     public int getOptionsCount(Locator dropdown) {
         List<ElementHandle> options = dropdown.locator("option").elementHandles();
         return options.size();
+    }
+
+    private List<ElementHandle> getAllOptionsElements(Locator dropdown) {
+      return dropdown.locator("option").elementHandles();
+    }
+
+    public List<String> getAllOptions(Locator dropDown){
+        List<String> choices = new LinkedList<>();
+        List<ElementHandle> elements = getAllOptionsElements(dropDown);
+        for(ElementHandle locator : elements) {
+            choices.add(locator.innerText());
+        }
+        return choices;
     }
 
 }

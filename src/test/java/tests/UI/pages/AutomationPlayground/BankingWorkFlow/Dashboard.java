@@ -4,6 +4,7 @@ import base.BasePage;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.AriaRole;
+import com.microsoft.playwright.options.WaitForSelectorState;
 import listeners.ReportUtil;
 import tests.utils.PageElementTextUtility;
 
@@ -14,6 +15,7 @@ public class Dashboard extends BasePage {
     private final Locator currentBalanceText;
     private final Locator balanceAmount;
     private final Locator balanceChart;
+    private final Locator payeePageLink;
 
     public Dashboard(Page page) {
         super(page);
@@ -23,6 +25,7 @@ public class Dashboard extends BasePage {
         this.currentBalanceText = page.getByText("Your Current Balance");
         this.balanceAmount = page.locator("#balance");
         this.balanceChart = page.locator("#balanceChart");
+        this.payeePageLink = page.locator("//a[contains(@href,'payee')]");
     }
 
     public String getUserName() {
@@ -41,7 +44,11 @@ public class Dashboard extends BasePage {
         PageElementTextUtility.waitUntilStableText(balanceAmount,5000,1000,regex);
         ReportUtil.verifyText(balanceAmount.textContent(), "$5680", "Balance amount is " + balanceAmount.textContent());
         ReportUtil.verifyTrue(balanceChart.isVisible(), "Balance Chart is present on the page");
-        
+    }
+
+    public void navigateToPayeePage() {
+        payeePageLink.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        payeePageLink.click();
     }
 
 }
