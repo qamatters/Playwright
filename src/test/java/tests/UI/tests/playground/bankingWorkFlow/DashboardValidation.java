@@ -15,5 +15,6 @@ public class DashboardValidation extends BaseUITest {
         page.navigate("https://qamatters.github.io/demoautomationWebSite/WorkFlows/Banking/index.html");
         loginToBankApplication.loginToBankApplication();
         dashboard.validateOperations();
+        dashboard.dashboardPageValidations();
     }
 }
