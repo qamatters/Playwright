@@ -3,6 +3,7 @@ package tests.UI.pages.AutomationPlayground.BankingWorkFlow;
 import base.BasePage;
 import base.fields.AlertHelper;
 import base.fields.DropDownHelper;
+import base.fields.TableHelper;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.AriaRole;
@@ -29,6 +30,8 @@ public class PayeePage extends BasePage {
     private final Locator removePayeeDropDown;
     private final Locator removePayeeButton;
 
+    private final Locator payeeTable;
+
 
     public PayeePage(Page page) {
         super(page);
@@ -44,6 +47,7 @@ public class PayeePage extends BasePage {
         this.addedPayeeBranchName = page.getByRole(AriaRole.CELL, new Page.GetByRoleOptions().setName("DLF Cyber Hub"));
         this.removePayeeDropDown = page.locator("#removePayeeSelect");
         this.removePayeeButton = page.locator("#removePayeeBtn");
+        this.payeeTable = page.locator("table.w-full");
     }
 
     public void addPayee() {
@@ -86,8 +90,22 @@ public class PayeePage extends BasePage {
     }
 
     public void validateRemoveButtonPresenceInPayeeTable(String payeeName) {
-        Locator payeeNameInTable = page.locator("//tbody[@id='payeesTableBody']//td[contains(.,'"+payeeName+"')]//following-sibling::td//button[contains(text(),'Remove')]");
+        Locator payeeNameInTable = page.locator("//tbody[@id='payeesTableBody']//td[contains(.,'" + payeeName + "')]//following-sibling::td//button[contains(text(),'Remove')]");
         ReportUtil.assertTrue(payeeNameInTable.isVisible(), payeeName + " is available in Payee Table");
+    }
+
+    public void validatePayeeTableData() {
+        int headerRow =1;
+        int totalRows = TableHelper.getRowCount(payeeTable);
+        int totalColumns = TableHelper.getColumnCount(payeeTable);
+        List<String> payeeNames = TableHelper.getColumnValues(payeeTable, 0);
+        ReportUtil.verifyEquals(totalColumns, 5, "Total 5 columns are present");
+        ReportUtil.verifyEquals(totalRows-headerRow, 3, "Total 3 payees details are present");
+        int i =1;
+        for(String payeeName : payeeNames) {
+            ReportUtil.logInfo(i+ " Payee Name :" + payeeName);
+            i = i+1;
+        }
     }
 
 }

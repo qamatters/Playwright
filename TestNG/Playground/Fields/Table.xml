@@ -1,18 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="AutomationPlaygroundBankingApplication" verbose="5">
+<suite name="AutomationPlaygroundTableBehaviourCheck" verbose="5">
     <listeners>
         <listener class-name="listeners.ExtentTestNGReporter" />
     </listeners>
-    <test name="Bank Demo App Test">
+    <test name="Table Playwright Test">
         <parameter name="browser" value="chrome"/>
         <parameter name="headless" value="false"/>
         <parameter name="logMode" value="console"/>
         <parameter name="url" value="https://qamatters.github.io/demoautomationWebSite/index.html"/>
         <classes>
-<!--            <class name="tests.UI.tests.playground.bankingWorkFlow.LoginValidation"></class>-->
-<!--            <class name="tests.UI.tests.playground.bankingWorkFlow.DashboardValidation"></class>-->
-            <class name="tests.UI.tests.playground.bankingWorkFlow.PayeePageValidation"></class>
+            <class name="tests.UI.tests.playground.fields.Test_TableBehviours"></class>
         </classes>
     </test> <!-- Test -->
 </suite> <!-- Suite -->
