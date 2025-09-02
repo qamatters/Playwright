@@ -12,6 +12,7 @@
         <classes>
             <class name="tests.UI.tests.playground.bankingWorkFlow.LoginValidation"></class>
             <class name="tests.UI.tests.playground.bankingWorkFlow.DashboardValidation"></class>
+            <class name="tests.UI.tests.playground.bankingWorkFlow.PayeePageValidation"></class>
         </classes>
     </test> <!-- Test -->
 </suite> <!-- Suite -->

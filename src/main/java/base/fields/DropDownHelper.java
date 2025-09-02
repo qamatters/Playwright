@@ -80,6 +80,10 @@ public class DropDownHelper {
         return (List<String>) dropdown.evaluate("el => Array.from(el.selectedOptions).map(opt => opt.value)");
     }
 
+    public List<String> getSelectedText(Locator dropdown) {
+        return (List<String>) dropdown.evaluate("el => Array.from(el.selectedOptions).map(opt => opt.textContent.trim())");
+    }
+
 
     // ================= EVENT-TRIGGERED DROPDOWN =================
     public void selectWithEvent(Locator dropdown, String value) {
