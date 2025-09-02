@@ -19,7 +19,6 @@ public class AlertPage extends BasePage {
 
     public AlertPage(Page page) {
         super(page);
-
         this.simpleAlertTrigger = page.locator("#alertBtn");
         this.confirmAlertTrigger = page.locator("#confirmBtn");
         this.promptAlertTrigger = page.locator("#promptBtn");

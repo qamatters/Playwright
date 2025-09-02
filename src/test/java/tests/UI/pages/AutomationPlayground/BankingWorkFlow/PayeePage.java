@@ -12,11 +12,10 @@ import listeners.ReportUtil;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static base.fields.DropDownHelper.*;
 import static tests.UI.pages.AutomationPlayground.BankingWorkFlow.constants.PayeeConstants.*;
 
 public class PayeePage extends BasePage {
-    DropDownHelper dropDownHelper = new DropDownHelper(page);
-    AlertHelper alertHelper = new AlertHelper(page);
     private final Locator addPayeeName;
     private final Locator addPayeeBank;
     private final Locator addPayeeBaranch;
@@ -72,7 +71,7 @@ public class PayeePage extends BasePage {
     public void getPayeeFromRemovePayeeList() {
         removePayeeDropDown.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         ReportUtil.verifyTrue(removePayeeDropDown.isVisible(), "Remove payee drop down field is available on the page");
-        List<String> allPayees = dropDownHelper.getAllOptions(removePayeeDropDown);
+        List<String> allPayees = getAllOptions(removePayeeDropDown);
         List<String> allPayeeWithoutExtraSpaces = allPayees.stream().map(String::trim).collect(Collectors.toList());
         ReportUtil.logInfo("All payee in remove payee list :" + allPayeeWithoutExtraSpaces);
         ReportUtil.assertTrue(allPayeeWithoutExtraSpaces.contains(PAYEE_NAME), "Payee is available in the remove payee list");
@@ -80,8 +79,8 @@ public class PayeePage extends BasePage {
 
     public void removePayee() {
         getPayeeFromRemovePayeeList();
-        dropDownHelper.selectByValue(removePayeeDropDown, PAYEE_NAME);
-        List<String> payees = dropDownHelper.getSelectedText(removePayeeDropDown);
+        selectByValue(removePayeeDropDown, PAYEE_NAME);
+        List<String> payees = getSelectedText(removePayeeDropDown);
         ReportUtil.assertEquals(payees.get(0), PAYEE_NAME, PAYEE_NAME + " is selected for removal");
         removePayeeButton.click();
     }

@@ -14,8 +14,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static base.fields.DropDownHelper.getAllOptions;
+
 public class FundTransferPage extends BasePage {
-    DropDownHelper dropDownHelper = new DropDownHelper(page);
     protected Locator payeeTransferList;
 
     public FundTransferPage(Page page) {
@@ -24,7 +25,7 @@ public class FundTransferPage extends BasePage {
     }
 
     public List<String> getAllPayeeNames() {
-        List<String> payeeNamesWithBankNames = dropDownHelper.getAllOptions(payeeTransferList);
+        List<String> payeeNamesWithBankNames = getAllOptions(payeeTransferList);
         List<String> payeeNames = new LinkedList<>();
         for (String payee : payeeNamesWithBankNames) {
             payeeNames.add(StringUtils.substringBefore(payee.trim(), "("));
@@ -37,4 +38,6 @@ public class FundTransferPage extends BasePage {
         ReportUtil.logInfo("All payee names are :" + payeeNames);
         ReportUtil.assertTrue(payeeNames.contains(addedPayee), "Payee Name " + addedPayee + " is available in the list for fund transfer available payees");
     }
+
+
 }
