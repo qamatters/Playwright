@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="AutomationPlaygroundDemoWebForm" verbose="5">
+    <listeners>
+        <listener class-name="listeners.ExtentTestNGReporter" />
+    </listeners>
+    <test name="WebForm Test">
+        <parameter name="browser" value="chrome"/>
+        <parameter name="headless" value="false"/>
+        <parameter name="logMode" value="console"/>
+        <parameter name="url" value="https://qamatters.github.io/demoautomationWebSite/index.html"/>
+        <classes>
+            <class name="tests.UI.tests.playground.webForm.Test_DemoForm"></class>
+        </classes>
+    </test> <!-- Test -->
+</suite> <!-- Suite -->
