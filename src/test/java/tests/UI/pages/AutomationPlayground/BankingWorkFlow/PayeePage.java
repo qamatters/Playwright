@@ -61,6 +61,7 @@ public class PayeePage extends BasePage {
         ReportUtil.verifyTrue(addedPayeeBankName.isVisible(), "Added payee bank name is available in payee table");
         ReportUtil.verifyTrue(addedPayeeAccountNumber.isVisible(), "Added payee account number is available in payee table");
         ReportUtil.verifyTrue(addedPayeeBranchName.isVisible(), "Added payee branch name is available in payee table");
+        validateRemoveButtonPresenceInPayeeTable(PAYEE_NAME);
     }
 
     public void clickFundTransfer() {
@@ -84,4 +85,10 @@ public class PayeePage extends BasePage {
         ReportUtil.assertEquals(payees.get(0), PAYEE_NAME, PAYEE_NAME + " is selected for removal");
         removePayeeButton.click();
     }
+
+    public void validateRemoveButtonPresenceInPayeeTable(String payeeName) {
+        Locator payeeNameInTable = page.locator("//tbody[@id='payeesTableBody']//td[contains(.,'"+payeeName+"')]//following-sibling::td//button[contains(text(),'Remove')]");
+        ReportUtil.assertTrue(payeeNameInTable.isVisible(), payeeName + " is available in Payee Table");
+    }
+
 }

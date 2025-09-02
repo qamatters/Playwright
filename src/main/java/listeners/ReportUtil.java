@@ -77,7 +77,7 @@ public class ReportUtil extends ExtentTestNGReporter {
         if (!actual.equals(expected)) {
             captureSoftFail(message, actual, expected);
         } else {
-            logInfo("Soft Verify Passed: " + message + " | Actual: " + actual + ", Expected: " + expected);
+            logInfo("Validated Successfully: " + message + " | Actual: " + actual + ", Expected: " + expected);
         }
     }
 
@@ -104,7 +104,7 @@ public class ReportUtil extends ExtentTestNGReporter {
 
     private static void captureSoftFail(String message, Object actual, Object expected) {
         try {
-            String path = ScreenshotUtil.captureScreenshot("SoftVerifyFail_" + System.currentTimeMillis());
+            String path = ScreenshotUtil.captureScreenshot("VerificationFail_" + System.currentTimeMillis());
             getCurrentTest().fail(
                     message + " | Expected: " + expected + ", Actual: " + actual,
                     MediaEntityBuilder.createScreenCaptureFromPath(path).build()
@@ -146,11 +146,11 @@ public class ReportUtil extends ExtentTestNGReporter {
     // ===================== SOFT VERIFICATION =====================
     public static void verifyEquals(Object actual, Object expected, String message) {
         if (actual == null && expected == null) {
-            logInfo("Soft Verify Passed: " + message + " | Both values are null");
+            logInfo("Validated Successfully: " + message + " | Both values are null");
             return;
         }
         if (actual != null && actual.equals(expected)) {
-            logInfo("Soft Verify Passed: " + message + " | Actual: " + actual + ", Expected: " + expected);
+            logInfo("Validated Successfully: " + message + " | Actual: " + actual + ", Expected: " + expected);
         } else {
             captureSoftFail(message, actual, expected);
         }
@@ -171,7 +171,7 @@ public class ReportUtil extends ExtentTestNGReporter {
         if (!condition) {
             captureSoftFail(message, false, true); // Expected: true, Actual: false
         } else {
-            logInfo("Soft Verify Passed: " + message + " | Condition is true");
+            logInfo("Validated Successfully: " + message + " | Condition is true");
         }
     }
 
