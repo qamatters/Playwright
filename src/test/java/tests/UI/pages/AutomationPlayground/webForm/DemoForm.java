@@ -183,7 +183,7 @@ public class DemoForm extends BasePage {
         ReportUtil.verifyText(cells.get(13).textContent(), data.getFavColor(), "Fav Color");
         ReportUtil.verifyText(cells.get(14).textContent(), data.getVolume(), "Volume");
         ReportUtil.verifyText(cells.get(15).textContent(), data.getSearch(), "Search");
-        ReportUtil.logInfo("Submitted form data validated successfully in the table.");
+        ReportUtil.logPass("Form submitted and validated successfully.");
     }
 
 }

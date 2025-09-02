@@ -42,6 +42,11 @@ public class ReportUtil extends ExtentTestNGReporter {
         if (extentTest != null) extentTest.info(message);
     }
 
+    public static void logPass(String message) {
+        ExtentTest extentTest = getCurrentTest();
+        if (extentTest != null) extentTest.pass(message);
+    }
+
     public static void logWarning(String message) {
         ExtentTest extentTest = getCurrentTest();
         if (extentTest != null) extentTest.warning(message);
@@ -55,7 +60,7 @@ public class ReportUtil extends ExtentTestNGReporter {
     // ===================== HARD ASSERTIONS =====================
     public static void assertText(String actual, String expected, String message) {
         if (actual.equals(expected)) {
-            logInfo("Assert Passed: " + message + " | Actual: " + actual + ", Expected: " + expected);
+            logPass("Assert Passed: " + message + " | Actual: " + actual + ", Expected: " + expected);
         } else {
             captureFail("Assert Failed: " + message + " | Actual: " + actual + ", Expected: " + expected);
             throw new AssertionError(message + " | Expected: " + expected + ", Actual: " + actual);
@@ -77,7 +82,7 @@ public class ReportUtil extends ExtentTestNGReporter {
         if (!actual.equals(expected)) {
             captureSoftFail(message, actual, expected);
         } else {
-            logInfo("Validated Successfully: " + message + " | Actual: " + actual + ", Expected: " + expected);
+            logPass("Validated Successfully: " + message + " | Actual: " + actual + ", Expected: " + expected);
         }
     }
 
@@ -132,11 +137,11 @@ public class ReportUtil extends ExtentTestNGReporter {
     // ===================== HARD ASSERTIONS =====================
     public static void assertEquals(Object actual, Object expected, String message) {
         if (actual == null && expected == null) {
-            logInfo("Assert Passed: " + message + " | Both values are null");
+            logPass("Assert Passed: " + message + " | Both values are null");
             return;
         }
         if (actual != null && actual.equals(expected)) {
-            logInfo("Assert Passed: " + message + " | Actual: " + actual + ", Expected: " + expected);
+            logPass("Assert Passed: " + message + " | Actual: " + actual + ", Expected: " + expected);
         } else {
             captureFail("Assert Failed: " + message + " | Actual: " + actual + ", Expected: " + expected);
             throw new AssertionError(message + " | Expected: " + expected + ", Actual: " + actual);
@@ -146,11 +151,11 @@ public class ReportUtil extends ExtentTestNGReporter {
     // ===================== SOFT VERIFICATION =====================
     public static void verifyEquals(Object actual, Object expected, String message) {
         if (actual == null && expected == null) {
-            logInfo("Validated Successfully: " + message + " | Both values are null");
+            logPass("Validated Successfully: " + message + " | Both values are null");
             return;
         }
         if (actual != null && actual.equals(expected)) {
-            logInfo("Validated Successfully: " + message + " | Actual: " + actual + ", Expected: " + expected);
+            logPass("Validated Successfully: " + message + " | Actual: " + actual + ", Expected: " + expected);
         } else {
             captureSoftFail(message, actual, expected);
         }
@@ -159,7 +164,7 @@ public class ReportUtil extends ExtentTestNGReporter {
     // ===================== HARD ASSERTIONS =====================
     public static void assertTrue(boolean condition, String message) {
         if (condition) {
-            logInfo("Assert Passed: " + message);
+            logPass("Assert Passed: " + message);
         } else {
             captureFail("Assert Failed: " + message);
             throw new AssertionError("Assert Failed: " + message);
@@ -171,7 +176,7 @@ public class ReportUtil extends ExtentTestNGReporter {
         if (!condition) {
             captureSoftFail(message, false, true); // Expected: true, Actual: false
         } else {
-            logInfo("Validated Successfully: " + message + " | Condition is true");
+            logPass("Validated Successfully: " + message + " | Condition is true");
         }
     }
 
