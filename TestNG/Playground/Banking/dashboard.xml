@@ -10,8 +10,8 @@
         <parameter name="logMode" value="console"/>
         <parameter name="url" value="https://qamatters.github.io/demoautomationWebSite/index.html"/>
         <classes>
-<!--            <class name="tests.UI.tests.playground.bankingWorkFlow.LoginValidation"></class>-->
-<!--            <class name="tests.UI.tests.playground.bankingWorkFlow.DashboardValidation"></class>-->
+            <class name="tests.UI.tests.playground.bankingWorkFlow.LoginValidation"></class>
+            <class name="tests.UI.tests.playground.bankingWorkFlow.DashboardValidation"></class>
             <class name="tests.UI.tests.playground.bankingWorkFlow.PayeePageValidation"></class>
         </classes>
     </test> <!-- Test -->
