@@ -113,7 +113,10 @@ public class FormData {
         private List<String> iframeCheckboxes;
         private String iframeText;
 
-        public Builder fullName(String fullName) { this.fullName = fullName; return this; }
+        public Builder fullName(String fullName) {
+            this.fullName = fullName;
+            return this;
+        }
         public Builder password(String password) { this.password = password; return this; }
         public Builder comments(String comments) { this.comments = comments; return this; }
         public Builder age(String age) { this.age = age; return this; }
