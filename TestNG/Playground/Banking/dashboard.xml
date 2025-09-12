@@ -9,6 +9,7 @@
         <parameter name="headless" value="false"/>
         <parameter name="logMode" value="console"/>
         <parameter name="url" value="https://qamatters.github.io/demoautomationWebSite/index.html"/>
+        <parameter name="videoRecording" value="true"/>
         <classes>
             <class name="tests.UI.tests.playground.bankingWorkFlow.LoginValidation"></class>
             <class name="tests.UI.tests.playground.bankingWorkFlow.DashboardValidation"></class>

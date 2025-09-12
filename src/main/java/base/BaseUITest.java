@@ -2,6 +2,7 @@ package base;
 
 import com.aventstack.extentreports.Status;
 import com.microsoft.playwright.*;
+import com.microsoft.playwright.options.RecordVideoSize;
 import listeners.ExtentTestNGReporter;
 import listeners.ReportUtil;
 import listeners.ScreenshotUtil;
@@ -11,7 +12,16 @@ import utils.Logger;
 import utils.enums.BrowserEngine;
 import utils.enums.LogMode;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 public abstract class BaseUITest {
+    protected static final Path REPORTS_DIR = Paths.get("reports");
+    protected static final Path TRACE_PATH = REPORTS_DIR.resolve("trace/trace.zip");
+    protected static final Path VIDEO_DIR = REPORTS_DIR.resolve("videos");
+    protected boolean videoRecording;
     protected static Playwright playwright;
     protected static Browser browser;
     protected static BrowserContext context;
@@ -23,12 +33,18 @@ public abstract class BaseUITest {
 
     @BeforeClass(alwaysRun = true)
     @Parameters({"logMode", "url", "browser", "headless"})
-    public void baseSetup(String mode, String url, String browserType, String headless) {
+    public void baseSetup(String mode, String url, String browserType, String headless) throws IOException {
+        // Ensure reports/videos and reports/trace directories exist
+        Files.createDirectories(VIDEO_DIR);
+        Files.createDirectories(TRACE_PATH.getParent());
+
         playwright = Playwright.create();
         this.logMode = LogMode.parse(System.getProperty("logMode", mode));
         this.url = url;
         this.browserType = BrowserEngine.parse(System.getProperty("browser", browserType));
         this.headless = Boolean.parseBoolean(System.getProperty("headless", headless));
+        this.videoRecording = Boolean.parseBoolean(System.getProperty("videoRecording", "true"));
+
         Logger.log("Testing class " + this.getClass().getSimpleName(), logMode);
 
         BrowserType.LaunchOptions options = new BrowserType.LaunchOptions().setHeadless(this.headless);
@@ -38,17 +54,59 @@ public abstract class BaseUITest {
             default -> browser = playwright.chromium().launch(options);
         }
 
-        context = browser.newContext();
+        Browser.NewContextOptions contextOptions = new Browser.NewContextOptions()
+                .setRecordVideoDir(VIDEO_DIR)
+                .setRecordVideoSize(new RecordVideoSize(1280, 720));
+
+        context = browser.newContext(contextOptions);
+        startTracing();
         page = context.newPage();
 
-        // Set page in utilities
         ScreenshotUtil.setPage(page);
         ReportUtil.setPage(page);
     }
 
+    public void startTracing() {
+        context.tracing().start(new Tracing.StartOptions()
+                .setScreenshots(true)
+                .setSnapshots(true)
+                .setSources(true));
+    }
+
+    public void stopTracingAndSave() {
+        try {
+            context.tracing().stop(new Tracing.StopOptions()
+                    .setPath(TRACE_PATH));
+        } catch (Exception e) {
+            System.out.println("Failed to save trace: " + e.getMessage());
+        }
+    }
+
+    public void openTraceViewer() throws IOException, InterruptedException {
+        new ProcessBuilder("npx", "playwright", "show-trace", TRACE_PATH.toString())
+                .inheritIO()
+                .start()
+                .waitFor();
+    }
+
     @AfterClass(alwaysRun = true)
     public void baseTeardown() {
-        if (page != null) page.close();
+        stopTracingAndSave();
+
+        if (page != null) {
+            try {
+                Video video = page.video();
+                if (video != null) {
+                    Path videoPath = VIDEO_DIR.resolve("test-video.webm");
+                    video.saveAs(videoPath);
+                    Logger.log("Video saved at " + videoPath, logMode);
+                }
+            } catch (Exception e) {
+                System.out.println("Video save failed: " + e.getMessage());
+            }
+            page.close();
+        }
+
         if (context != null) context.close();
         if (browser != null) browser.close();
         if (playwright != null) playwright.close();
@@ -70,12 +128,9 @@ public abstract class BaseUITest {
     @AfterMethod(alwaysRun = true)
     public void tearDown(ITestResult result) {
         try {
-            // Handle soft assertions (if any failed)
             ReportUtil.assertAll();
         } catch (AssertionError e) {
             System.out.println("Assertion failure details: " + e.getMessage());
-
-            // Only log if not already logged by listener (runtime failure case)
             if (result.getAttribute("extentLogged") == null) {
                 if (result.getStatus() == ITestResult.SUCCESS) {
                     result.setStatus(ITestResult.FAILURE);
@@ -86,11 +141,8 @@ public abstract class BaseUITest {
                         "Test failed due to assertion error(s). See step-level details above."
                 );
             }
-
-            // Re-throw so console shows FAIL
             throw e;
         } finally {
-            // Always mark test finished
             ReportUtil.logInfo("Test Case Finished");
         }
     }
