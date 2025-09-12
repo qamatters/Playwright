@@ -120,7 +120,7 @@ public class DropDownHelper {
         List<String> choices = new LinkedList<>();
         List<ElementHandle> elements = getAllOptionsElements(dropDown);
         for (ElementHandle locator : elements) {
-            choices.add(locator.innerText());
+            choices.add(locator.innerText().trim());
         }
         return choices;
     }
