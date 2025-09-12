@@ -32,8 +32,8 @@ public abstract class BaseUITest {
     protected boolean headless;
 
     @BeforeClass(alwaysRun = true)
-    @Parameters({"logMode", "url", "browser", "headless"})
-    public void baseSetup(String mode, String url, String browserType, String headless) throws IOException {
+    @Parameters({"logMode", "url", "browser", "headless", "videoRecording"})
+    public void baseSetup(String mode, String url, String browserType, String headless, String videoRecording) throws IOException {
         // Ensure reports/videos and reports/trace directories exist
         Files.createDirectories(VIDEO_DIR);
         Files.createDirectories(TRACE_PATH.getParent());
@@ -42,9 +42,11 @@ public abstract class BaseUITest {
         this.logMode = LogMode.parse(System.getProperty("logMode", mode));
         this.url = url;
         this.browserType = BrowserEngine.parse(System.getProperty("browser", browserType));
-        this.headless = Boolean.parseBoolean(System.getProperty("headless", headless));
-        this.videoRecording = Boolean.parseBoolean(System.getProperty("videoRecording", "true"));
-
+       this.headless = Boolean.parseBoolean(System.getProperty("headless", String.valueOf(headless)).toLowerCase());
+        this.videoRecording = Boolean.parseBoolean(System.getProperty("videoRecording", String.valueOf(videoRecording)).toLowerCase());
+        if (this.videoRecording) {
+            Logger.log("WARNING: Video recording is discouraged and should only be enabled for debugging!", logMode);
+        }
         Logger.log("Testing class " + this.getClass().getSimpleName(), logMode);
 
         BrowserType.LaunchOptions options = new BrowserType.LaunchOptions().setHeadless(this.headless);
@@ -54,9 +56,14 @@ public abstract class BaseUITest {
             default -> browser = playwright.chromium().launch(options);
         }
 
-        Browser.NewContextOptions contextOptions = new Browser.NewContextOptions()
-                .setRecordVideoDir(VIDEO_DIR)
-                .setRecordVideoSize(new RecordVideoSize(1280, 720));
+        Browser.NewContextOptions contextOptions = null;
+        if (this.videoRecording) {
+            contextOptions = new Browser.NewContextOptions()
+                    .setRecordVideoDir(VIDEO_DIR)
+                    .setRecordVideoSize(new RecordVideoSize(1280, 720));
+        } else {
+            contextOptions = new Browser.NewContextOptions();
+        }
 
         context = browser.newContext(contextOptions);
         startTracing();
