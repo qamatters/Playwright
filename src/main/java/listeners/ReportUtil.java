@@ -4,18 +4,23 @@ import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.MediaEntityBuilder;
 import com.microsoft.playwright.Page;
 import org.testng.asserts.SoftAssert;
+import utils.LiveExtentLogger;
 
 import java.io.IOException;
 
 /**
- * ReportUtil: central utility for logging, hard assertions, and soft verifications.
- * - Hard assertions fail immediately.
- * - Soft verifications continue execution but mark the test as fail in the end.
- * - All failures capture screenshots and attach to ExtentReports.
+ * ReportUtil: central utility for logging, hard assertions, soft verifications,
+ * global uncaught exception handling, and optional screenshot on pass.
  */
 public class ReportUtil extends ExtentTestNGReporter {
 
     private static SoftAssert softAssert = new SoftAssert();
+
+    private static boolean capturePassScreenshots = false;
+
+    public static void enablePassScreenshots(boolean enable) {
+        capturePassScreenshots = enable;
+    }
 
     // ===================== PAGE SETUP =====================
     public static void setPage(Page page) {
@@ -38,31 +43,53 @@ public class ReportUtil extends ExtentTestNGReporter {
 
     // ===================== LOGGING =====================
     public static void logInfo(String message) {
-        ExtentTest extentTest = getCurrentTest();
-        if (extentTest != null) extentTest.info(message);
+        ExtentTest test = getCurrentTest();
+        if (test != null) test.info(message);
+        if (test != null) LiveExtentLogger.log(test.getModel().getName(), message, null);
     }
 
     public static void logPass(String message) {
-        ExtentTest extentTest = getCurrentTest();
-        if (extentTest != null) extentTest.pass(message);
-    }
-
-    public static void logWarning(String message) {
-        ExtentTest extentTest = getCurrentTest();
-        if (extentTest != null) extentTest.warning(message);
+        ExtentTest test = getCurrentTest();
+        if (test != null) {
+            String liveMessage = "Validated Successfully: " + message;
+            if (capturePassScreenshots) {
+                try {
+                    String path = ScreenshotUtil.captureScreenshot("Pass_" + System.currentTimeMillis());
+                    test.pass(liveMessage, MediaEntityBuilder.createScreenCaptureFromPath(path).build());
+                } catch (IOException e) {
+                    test.pass(liveMessage + " (Screenshot capture failed)");
+                }
+            } else {
+                test.pass(liveMessage);
+            }
+            LiveExtentLogger.log(test.getModel().getName(), liveMessage, "Passed");
+        }
     }
 
     public static void logFail(String message) {
-        ExtentTest extentTest = getCurrentTest();
-        if (extentTest != null) extentTest.fail(message);
+        ExtentTest test = getCurrentTest();
+        if (test != null) {
+            String liveMessage = "Validation Failed: " + message;
+            test.fail(liveMessage);
+            LiveExtentLogger.log(test.getModel().getName(), liveMessage, "Failed");
+        }
+    }
+
+    public static void logWarning(String message) {
+        ExtentTest test = getCurrentTest();
+        if (test != null) {
+            String liveMessage = "Warning: " + message;
+            test.warning(liveMessage);
+            LiveExtentLogger.log(test.getModel().getName(), liveMessage, "Warning");
+        }
     }
 
     // ===================== HARD ASSERTIONS =====================
     public static void assertText(String actual, String expected, String message) {
         if (actual.equals(expected)) {
-            logPass("Assert Passed: " + message + " | Actual: " + actual + ", Expected: " + expected);
+            logPass(message + " | Actual: " + actual + ", Expected: " + expected);
         } else {
-            captureFail("Assert Failed: " + message + " | Actual: " + actual + ", Expected: " + expected);
+            captureFail(message, actual, expected);
             throw new AssertionError(message + " | Expected: " + expected + ", Actual: " + actual);
         }
     }
@@ -82,7 +109,7 @@ public class ReportUtil extends ExtentTestNGReporter {
         if (!actual.equals(expected)) {
             captureSoftFail(message, actual, expected);
         } else {
-            logPass("Validated Successfully: " + message + " | Actual: " + actual + ", Expected: " + expected);
+            logPass(message + " | Actual: " + actual + ", Expected: " + expected);
         }
     }
 
@@ -97,36 +124,35 @@ public class ReportUtil extends ExtentTestNGReporter {
     }
 
     // ===================== SCREENSHOT HELPERS =====================
-    private static void captureFail(String message) {
+    private static void captureFail(String message, Object actual, Object expected) {
+        String fullMessage = "Validation Failed: " + message + " | Actual: " + actual + ", Expected: " + expected;
         try {
             String path = ScreenshotUtil.captureScreenshot("AssertFail_" + System.currentTimeMillis());
-            getCurrentTest().fail(message,
-                    MediaEntityBuilder.createScreenCaptureFromPath(path).build());
+            getCurrentTest().fail(fullMessage, MediaEntityBuilder.createScreenCaptureFromPath(path).build());
+            LiveExtentLogger.log(getCurrentTest().getModel().getName(), fullMessage, "Failed");
         } catch (IOException e) {
-            logFail(message + " (Screenshot capture failed)");
+            LiveExtentLogger.log(getCurrentTest().getModel().getName(), fullMessage + " (Screenshot capture failed)", "Failed");
         }
     }
 
     private static void captureSoftFail(String message, Object actual, Object expected) {
+        String fullMessage = "Validation Failed: " + message + " | Actual: " + actual + ", Expected: " + expected;
         try {
             String path = ScreenshotUtil.captureScreenshot("VerificationFail_" + System.currentTimeMillis());
-            getCurrentTest().fail(
-                    message + " | Expected: " + expected + ", Actual: " + actual,
-                    MediaEntityBuilder.createScreenCaptureFromPath(path).build()
-            );
+            getCurrentTest().fail(fullMessage, MediaEntityBuilder.createScreenCaptureFromPath(path).build());
+            LiveExtentLogger.log(getCurrentTest().getModel().getName(), fullMessage, "Failed");
         } catch (IOException e) {
-            logFail(message + " (Screenshot capture failed)");
+            LiveExtentLogger.log(getCurrentTest().getModel().getName(), fullMessage + " (Screenshot capture failed)", "Failed");
         }
-        // Mark as soft assert failed
-        softAssert.fail(message + " | Expected: " + expected + ", Actual: " + actual);
+        softAssert.fail(fullMessage);
     }
 
     // ===================== FINAL ASSERT ALL =====================
     public static void assertAll() {
         try {
-            softAssert.assertAll(); // throws AssertionError if any soft assertion failed
+            softAssert.assertAll();
         } finally {
-            initSoftAssert(); // reset for next test
+            initSoftAssert();
         }
     }
 
@@ -134,65 +160,81 @@ public class ReportUtil extends ExtentTestNGReporter {
         softAssert = new SoftAssert();
     }
 
-    // ===================== HARD ASSERTIONS =====================
+    // ===================== OTHER ASSERTIONS =====================
     public static void assertEquals(Object actual, Object expected, String message) {
         if (actual == null && expected == null) {
-            logPass("Assert Passed: " + message + " | Both values are null");
+            logPass(message + " | Both values are null");
             return;
         }
         if (actual != null && actual.equals(expected)) {
-            logPass("Assert Passed: " + message + " | Actual: " + actual + ", Expected: " + expected);
+            logPass(message + " | Actual: " + actual + ", Expected: " + expected);
         } else {
-            captureFail("Assert Failed: " + message + " | Actual: " + actual + ", Expected: " + expected);
+            captureFail(message, actual, expected);
             throw new AssertionError(message + " | Expected: " + expected + ", Actual: " + actual);
         }
     }
 
-    // ===================== SOFT VERIFICATION =====================
     public static void verifyEquals(Object actual, Object expected, String message) {
         if (actual == null && expected == null) {
-            logPass("Validated Successfully: " + message + " | Both values are null");
+            logPass(message + " | Both values are null");
             return;
         }
         if (actual != null && actual.equals(expected)) {
-            logPass("Validated Successfully: " + message + " | Actual: " + actual + ", Expected: " + expected);
+            logPass(message + " | Actual: " + actual + ", Expected: " + expected);
         } else {
             captureSoftFail(message, actual, expected);
         }
     }
 
-    // ===================== HARD ASSERTIONS =====================
     public static void assertTrue(boolean condition, String message) {
         if (condition) {
-            logPass("Assert Passed: " + message);
+            logPass(message);
         } else {
-            captureFail("Assert Failed: " + message);
+            captureFail(message, false, true);
             throw new AssertionError("Assert Failed: " + message);
         }
     }
 
-    // ===================== SOFT VERIFICATIONS =====================
     public static void verifyTrue(boolean condition, String message) {
         if (!condition) {
-            captureSoftFail(message, false, true); // Expected: true, Actual: false
+            captureSoftFail(message, false, true);
         } else {
-            logPass("Validated Successfully: " + message + " | Condition is true");
+            logPass(message + " | Condition is true");
         }
     }
 
     // ===================== TEST CASE WRAPPER =====================
-    /**
-     * Wraps a test case to ensure "Test Case Finished" is always logged in the report
-     */
     public static void runTestCase(String testName, Runnable steps) {
         logInfo("==== Test Case Started: " + testName + " ====");
         try {
             steps.run();
-        } catch (AssertionError | Exception e) {
-            logFail("Test case failed due to: " + e.getMessage());
-            throw e; // propagate so test is marked FAIL
+        } catch (Throwable t) {
+            logFail("Test case failed due to: " + t.getMessage());
+            throw t;
         } finally {
             logInfo("==== Test Case Finished: " + testName + " ====");
         }
+    }
+
+    // ===================== GLOBAL EXCEPTION HANDLER =====================
+    public static void initGlobalExceptionHandler() {
+        Thread.setDefaultUncaughtExceptionHandler((thread, throwable) -> {
+            ExtentTest test = getCurrentTest();
+            String message = "Error: Uncaught Exception in thread " + thread.getName() + ": " + throwable.getMessage();
+
+            if (test != null) {
+                test.fail(message);
+                LiveExtentLogger.log(test.getModel().getName(), message, "Failed");
+                try {
+                    String path = ScreenshotUtil.captureScreenshot("UncaughtException_" + System.currentTimeMillis());
+                    test.fail("Screenshot for uncaught exception", MediaEntityBuilder.createScreenCaptureFromPath(path).build());
+                } catch (IOException e) {
+                    LiveExtentLogger.log(test.getModel().getName(),
+                            "Failed to capture screenshot for uncaught exception: " + e.getMessage(), "Failed");
+                }
+            } else {
+                LiveExtentLogger.log("UnknownTest", message, "Failed");
+            }
+        });
     }
 }

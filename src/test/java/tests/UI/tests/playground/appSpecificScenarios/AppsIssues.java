@@ -29,10 +29,6 @@ public class AppsIssues extends BaseUITest {
         assertThat(page.getByRole(AriaRole.COMBOBOX, new Page.GetByRoleOptions().setName("share class")).locator("span")).isVisible();
 //        page.getByRole(AriaRole.COMBOBOX, new Page.GetByRoleOptions().setName("share class")).click();
         Locator selectDropDown = page.locator("#share-dropdown");
-        System.out.println("1: " +selectDropDown.isVisible());
-        System.out.println("2: " + selectDropDown.isHidden());
-        System.out.println("3: " +selectDropDown.isEditable());
-        System.out.println("4: " +selectDropDown.isEnabled());
         int options = DropDownHelper.getOptionsCount(selectDropDown);
         List<String> allOptions = DropDownHelper.getAllOptions(selectDropDown);
         System.out.println("All options are :" + allOptions);

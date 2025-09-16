@@ -12,7 +12,7 @@ public class LoginValidation extends BaseUITest {
     public void validateLoginPage() {
         LoginPage loginToBankApplication = new LoginPage(page);
         Dashboard dashboard= new Dashboard(page);
-        Logger.formattedLog("Testing T002_JPH_UI_Test.checkPageTitle", logMode);
+        Logger.formattedLog("Testing JIRA_300_Login Page Validation", logMode);
         page.navigate("https://qamatters.github.io/demoautomationWebSite/WorkFlows/Banking/index.html");
         Logger.formattedLog("Bank Demo app title: " + page.title(),this.logMode);
         ReportUtil.logInfo("Title of the App is :" + page.title());
@@ -20,7 +20,9 @@ public class LoginValidation extends BaseUITest {
         loginToBankApplication.loginToBankApplication();
         String userName = dashboard.getUserName();
         ReportUtil.logInfo("Logged in User Name is " + userName);
-        ReportUtil.verifyText(userName, "John Doe","Validate logged in User Name");
+        ReportUtil.verifyText(userName, "Deepak Mathpal","Validate logged in User Name");
         Logger.formattedLog("Bank Demo app title: " + userName,this.logMode);
+        dashboard.validateOperations();
+        dashboard.dashboardPageValidations();
     }
 }
