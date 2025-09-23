@@ -58,6 +58,9 @@ async function fetchData() {
             progressChart.update();
         }
 
+        const percent = data.progressPercent || 0;
+        document.getElementById('progressPercent').innerText = percent.toFixed(2) + "%";
+
         // Historical chart
         const historyRes = await fetch('/history');
         const historyData = await historyRes.json();

@@ -3,11 +3,13 @@
 <suite name="AutomationPlaygroundBankingApplication" verbose="5">
     <listeners>
         <listener class-name="listeners.ExtentTestNGReporter" />
+<!--        <listener class-name="listeners.CSVLiveTestListener"/>-->
+        <listener class-name="listeners.JsonLiveTestListener"/>
     </listeners>
     <test name="Bank Demo App Test">
         <parameter name="browser" value="chrome"/>
         <parameter name="headless" value="true"/>
-        <parameter name="logMode" value="console"/>
+        <parameter name="logMode" value="All"/>
         <parameter name="url" value="https://qamatters.github.io/demoautomationWebSite/index.html"/>
         <parameter name="videoRecording" value="false"/>
         <classes>
