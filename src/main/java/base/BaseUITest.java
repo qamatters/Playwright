@@ -32,10 +32,11 @@ public abstract class BaseUITest {
     protected BrowserEngine browserType;
     protected String url;
     protected boolean headless;
+    private boolean enableScreenShotOnSuccess;
 
     @BeforeClass(alwaysRun = true)
-    @Parameters({"logMode", "url", "browser", "headless", "videoRecording"})
-    public void baseSetup(String mode, String url, String browserType, String headless, String videoRecording) throws IOException {
+    @Parameters({"logMode", "url", "browser", "headless", "videoRecording", "enableScreenShotOnSuccess"})
+    public void baseSetup(String mode, String url, String browserType, String headless, String videoRecording, String enableScreenShotOnSuccess) throws IOException {
         Files.createDirectories(VIDEO_DIR);
         Files.createDirectories(TRACE_PATH.getParent());
 
@@ -45,6 +46,7 @@ public abstract class BaseUITest {
         this.browserType = BrowserEngine.parse(System.getProperty("browser", browserType));
         this.headless = Boolean.parseBoolean(System.getProperty("headless", String.valueOf(headless)).toLowerCase());
         this.videoRecording = Boolean.parseBoolean(System.getProperty("videoRecording", String.valueOf(videoRecording)).toLowerCase());
+        this.enableScreenShotOnSuccess = Boolean.parseBoolean(System.getProperty("enableScreenShotOnSuccess", String.valueOf(enableScreenShotOnSuccess)).toLowerCase());
 
         if (this.videoRecording) {
             Logger.log("WARNING: Video recording is discouraged and should only be enabled for debugging!", logMode);
@@ -77,7 +79,7 @@ public abstract class BaseUITest {
         // Initialize LiveExtentReporter global exception handling
         ReportUtil.initGlobalExceptionHandler();
         // Optional: Enable screenshots for all passed steps
-        ReportUtil.enablePassScreenshots(true);
+        ReportUtil.enablePassScreenshots(Boolean.parseBoolean(enableScreenShotOnSuccess));
     }
 
     public void startTracing() {

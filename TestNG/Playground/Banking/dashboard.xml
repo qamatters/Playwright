@@ -12,6 +12,7 @@
         <parameter name="logMode" value="All"/>
         <parameter name="url" value="https://qamatters.github.io/demoautomationWebSite/index.html"/>
         <parameter name="videoRecording" value="false"/>
+        <parameter name="enableScreenShotOnSuccess" value="false"></parameter>
         <classes>
             <class name="tests.UI.tests.playground.bankingWorkFlow.LoginValidation"></class>
             <class name="tests.UI.tests.playground.bankingWorkFlow.DashboardValidation"></class>
