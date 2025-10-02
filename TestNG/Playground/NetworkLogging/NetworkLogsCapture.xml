@@ -12,8 +12,7 @@
         <parameter name="enableScreenShotOnSuccess" value="false"></parameter>
         <parameter name="url" value="https://qamatters.github.io/demoautomationWebSite/index.html"/>
         <classes>
-            <class name="tests.UI.tests.playground.specificUseCases.Test_SpecificDropDownBehviour"></class>
-            <class name="tests.UI.tests.playground.specificUseCases.Test_LaunchBrowserInIncognito"></class>
+            <class name="tests.UI.tests.playground.specificUseCases.Test_CaptureNetWorkLogs"></class>
         </classes>
     </test> <!-- Test -->
 </suite> <!-- Suite -->
