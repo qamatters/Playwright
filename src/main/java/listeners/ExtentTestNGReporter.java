@@ -53,21 +53,31 @@ public class ExtentTestNGReporter implements ITestListener {
             LocalDateTime now = LocalDateTime.now();
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
 
-            // Timestamped report
-            reportPath = String.format("reports/ExtentReport-%s.html", dtf.format(now));
+            // Timestamped HTML Report
+            String reportPath = String.format("reports/ExtentReport-%s.html", dtf.format(now));
             ExtentSparkReporter timestampedReporter = new ExtentSparkReporter(reportPath);
             timestampedReporter.loadXMLConfig("src/test/resources/extent-config.xml");
             timestampedReporter.config().setOfflineMode(true);
 
-            // Default report (always overwritten)
+            // Default HTML Report (always overwritten)
             String defaultReport = "reports/ExtentReport.html";
             ExtentSparkReporter defaultReporter = new ExtentSparkReporter(defaultReport);
             defaultReporter.loadXMLConfig("src/test/resources/extent-config.xml");
             defaultReporter.config().setOfflineMode(true);
 
+            // JSON Report (timestamped + default)
+            String jsonReportPath = String.format("reports/ExtentReport-%s.json", dtf.format(now));
+            com.aventstack.extentreports.reporter.JsonFormatter timestampedJsonReporter =
+                    new com.aventstack.extentreports.reporter.JsonFormatter(jsonReportPath);
+
+            String defaultJsonPath = "reports/ExtentReport.json";
+            com.aventstack.extentreports.reporter.JsonFormatter defaultJsonReporter =
+                    new com.aventstack.extentreports.reporter.JsonFormatter(defaultJsonPath);
+
             // Initialize ExtentReports
             extent = new ExtentReports();
-            extent.attachReporter(timestampedReporter, defaultReporter);
+            extent.attachReporter(timestampedReporter, defaultReporter,
+                    timestampedJsonReporter, defaultJsonReporter);
 
             // System info
             extent.setSystemInfo("Tester", System.getProperty("user.name", "qamaters"));
@@ -80,6 +90,7 @@ public class ExtentTestNGReporter implements ITestListener {
         }
         flushReport();
     }
+
 
     @Override
     public void onTestStart(ITestResult result) {
@@ -151,13 +162,25 @@ public class ExtentTestNGReporter implements ITestListener {
     }
 
     // ===================== PAGE ACCESSORS =====================
-    public static void setPage(Page p) { page = p; }
-    public static Page getPage() { return page; }
+    public static void setPage(Page p) {
+        page = p;
+    }
+
+    public static Page getPage() {
+        return page;
+    }
 
     // ===================== TEST ACCESSORS =====================
-    public static ExtentTest getTest() { return testsMap.get(Thread.currentThread().getId()); }
-    public static String getReportPath() { return reportPath; }
+    public static ExtentTest getTest() {
+        return testsMap.get(Thread.currentThread().getId());
+    }
+
+    public static String getReportPath() {
+        return reportPath;
+    }
 
     // ===================== EXTENT REPORT INSTANCE =====================
-    public static ExtentReports getExtentReportsInstance() { return extent; }
+    public static ExtentReports getExtentReportsInstance() {
+        return extent;
+    }
 }

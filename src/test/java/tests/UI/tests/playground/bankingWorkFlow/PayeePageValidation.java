@@ -9,14 +9,11 @@ import tests.UI.pages.AutomationPlayground.BankingWorkFlow.LoginPage;
 import tests.UI.pages.AutomationPlayground.BankingWorkFlow.PayeePage;
 import utils.Logger;
 
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-
 import static tests.UI.pages.AutomationPlayground.BankingWorkFlow.constants.PayeeConstants.PAYEE_NAME;
 
 public class PayeePageValidation extends BaseUITest {
 
-    @Test
+ @Test(priority = 1)
     public void validatePayeeTable() {
         LoginPage loginToBankApplication = new LoginPage(page);
         Dashboard dashboard = new Dashboard(page);
@@ -31,7 +28,7 @@ public class PayeePageValidation extends BaseUITest {
         payeePage.validatePayeeTableData();
 
     }
-    @Test
+    @Test (dependsOnMethods = "validatePayeeTable", priority = 2)
     public void validateAddPayeePage() {
         LoginPage loginToBankApplication = new LoginPage(page);
         PayeePage payeePage = new PayeePage(page);
@@ -48,7 +45,7 @@ public class PayeePageValidation extends BaseUITest {
         payeePage.clickFundTransfer();
         fundTransferPage.validateAddedPayee(PAYEE_NAME);
     }
-    @Test (dependsOnMethods = "validateAddPayeePage")
+    @Test (dependsOnMethods = "validateAddPayeePage", priority = 3)
     public void validateRemovePayee() {
         LoginPage loginToBankApplication = new LoginPage(page);
         PayeePage payeePage = new PayeePage(page);
