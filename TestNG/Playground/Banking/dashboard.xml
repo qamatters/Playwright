@@ -4,7 +4,6 @@
     <listeners>
         <listener class-name="listeners.ExtentTestNGReporter" />
 <!--        <listener class-name="listeners.CSVLiveTestListener"/>-->
-        <listener class-name="listeners.JsonLiveTestListener"/>
     </listeners>
     <test name="Bank Demo App Test">
         <parameter name="browser" value="chrome"/>
