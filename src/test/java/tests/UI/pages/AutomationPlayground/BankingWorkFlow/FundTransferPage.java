@@ -1,20 +1,16 @@
 package tests.UI.pages.AutomationPlayground.BankingWorkFlow;
 
 import base.BasePage;
-import base.fields.DropDownHelper;
-import com.microsoft.playwright.ElementHandle;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
-import freemarker.template.utility.StringUtil;
 import listeners.ReportUtil;
 import org.apache.commons.lang3.StringUtils;
-import org.testng.Assert;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static base.fields.DropDownHelper.getAllOptions;
+import static base.fields.DropDownHelper.getAllOptionsFastImplementation;
 
 public class FundTransferPage extends BasePage {
     protected Locator payeeTransferList;
@@ -25,7 +21,7 @@ public class FundTransferPage extends BasePage {
     }
 
     public List<String> getAllPayeeNames() {
-        List<String> payeeNamesWithBankNames = getAllOptions(payeeTransferList);
+        List<String> payeeNamesWithBankNames = getAllOptionsFastImplementation(payeeTransferList);
         List<String> payeeNames = new LinkedList<>();
         for (String payee : payeeNamesWithBankNames) {
             payeeNames.add(StringUtils.substringBefore(payee.trim(), "("));

@@ -10,12 +10,11 @@ import java.io.IOException;
 
 /**
  * ReportUtil: central utility for logging, hard assertions, soft verifications,
- * global uncaught exception handling, and optional screenshot on pass.
+ * global uncaught exception handling, optional screenshot on pass, and live ExtentReport updates.
  */
 public class ReportUtil extends ExtentTestNGReporter {
 
     private static SoftAssert softAssert = new SoftAssert();
-
     private static boolean capturePassScreenshots = false;
 
     public static void enablePassScreenshots(boolean enable) {
@@ -45,7 +44,8 @@ public class ReportUtil extends ExtentTestNGReporter {
     public static void logInfo(String message) {
         ExtentTest test = getCurrentTest();
         if (test != null) test.info(message);
-        if (test != null) LiveExtentLogger.log(test.getModel().getName(), message, null);
+        LiveExtentLogger.log(test != null ? test.getModel().getName() : "UnknownTest", message, null);
+        flushReport();
     }
 
     public static void logPass(String message) {
@@ -64,6 +64,7 @@ public class ReportUtil extends ExtentTestNGReporter {
             }
             LiveExtentLogger.log(test.getModel().getName(), liveMessage, "Passed");
         }
+        flushReport();
     }
 
     public static void logFail(String message) {
@@ -73,6 +74,7 @@ public class ReportUtil extends ExtentTestNGReporter {
             test.fail(liveMessage);
             LiveExtentLogger.log(test.getModel().getName(), liveMessage, "Failed");
         }
+        flushReport();
     }
 
     public static void logWarning(String message) {
@@ -82,6 +84,7 @@ public class ReportUtil extends ExtentTestNGReporter {
             test.warning(liveMessage);
             LiveExtentLogger.log(test.getModel().getName(), liveMessage, "Warning");
         }
+        flushReport();
     }
 
     // ===================== HARD ASSERTIONS =====================
@@ -133,6 +136,7 @@ public class ReportUtil extends ExtentTestNGReporter {
         } catch (IOException e) {
             LiveExtentLogger.log(getCurrentTest().getModel().getName(), fullMessage + " (Screenshot capture failed)", "Failed");
         }
+        flushReport();
     }
 
     private static void captureSoftFail(String message, Object actual, Object expected) {
@@ -145,6 +149,7 @@ public class ReportUtil extends ExtentTestNGReporter {
             LiveExtentLogger.log(getCurrentTest().getModel().getName(), fullMessage + " (Screenshot capture failed)", "Failed");
         }
         softAssert.fail(fullMessage);
+        flushReport();
     }
 
     // ===================== FINAL ASSERT ALL =====================
@@ -154,6 +159,7 @@ public class ReportUtil extends ExtentTestNGReporter {
         } finally {
             initSoftAssert();
         }
+        flushReport();
     }
 
     public static void initSoftAssert() {
@@ -235,6 +241,21 @@ public class ReportUtil extends ExtentTestNGReporter {
             } else {
                 LiveExtentLogger.log("UnknownTest", message, "Failed");
             }
+            flushReport();
         });
+    }
+
+    // ===================== LIVE FLUSH HELPER =====================
+    private static void flushReport() {
+        ExtentTestNGReporter.getExtentReportsInstance(); // ensures extent is initialized
+        try {
+            if (ExtentTestNGReporter.getExtentReportsInstance() != null) {
+                synchronized (ExtentTestNGReporter.getExtentReportsInstance()) {
+                    ExtentTestNGReporter.getExtentReportsInstance().flush();
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Failed to flush extent report: " + e.getMessage());
+        }
     }
 }

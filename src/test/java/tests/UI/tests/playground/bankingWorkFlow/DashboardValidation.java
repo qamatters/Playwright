@@ -27,7 +27,6 @@ public class DashboardValidation extends BaseUITest {
         payeePage.addPayee();
         payeePage.clickFundTransfer();
         fundTransferPage.validateAddedPayee(PAYEE_NAME);
-        page.waitForTimeout(2000*60);
         dashboard.navigateToPayeePage();
         payeePage.removePayee();
     }

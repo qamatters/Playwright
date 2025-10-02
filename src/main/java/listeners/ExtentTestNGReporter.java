@@ -18,12 +18,30 @@ import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * ExtentTestNGReporter: TestNG listener with ExtentReports integration.
+ * Added: live flush after each test log for real-time updates.
+ * All existing features preserved: screenshots, emails, parameters, offline mode, system info.
+ */
 public class ExtentTestNGReporter implements ITestListener {
 
     private static ExtentReports extent;
     private static ConcurrentHashMap<Long, ExtentTest> testsMap = new ConcurrentHashMap<>();
     private static String reportPath = "";
     private static Page page;
+
+    // ===================== ExtentReports Live Flush =====================
+    private static void flushReport() {
+        try {
+            if (extent != null) {
+                synchronized (extent) { // thread-safe flush
+                    extent.flush();
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Failed to flush extent report: " + e.getMessage());
+        }
+    }
 
     @Override
     public void onStart(ITestContext context) {
@@ -60,6 +78,7 @@ public class ExtentTestNGReporter implements ITestListener {
         } catch (IOException e) {
             System.err.println("Failed to initialize ExtentReports: " + e);
         }
+        flushReport();
     }
 
     @Override
@@ -69,16 +88,18 @@ public class ExtentTestNGReporter implements ITestListener {
         testsMap.put(threadId, test);
 
         test.info("Test started at: " + LocalDateTime.now());
-
         if (result.getParameters().length > 0) {
             test.info("Test parameters: " + Arrays.toString(result.getParameters()));
         }
+
+        flushReport(); // live flush
     }
 
     @Override
     public void onTestSuccess(ITestResult result) {
         ExtentTest test = testsMap.get(Thread.currentThread().getId());
         if (test != null) test.pass("Test passed");
+        flushReport(); // live flush
     }
 
     @Override
@@ -98,17 +119,19 @@ public class ExtentTestNGReporter implements ITestListener {
             }
         }
         result.setAttribute("extentLogged", true);
+        flushReport(); // live flush
     }
 
     @Override
     public void onTestSkipped(ITestResult result) {
         ExtentTest test = testsMap.get(Thread.currentThread().getId());
         if (test != null) test.skip("Test skipped");
+        flushReport(); // live flush
     }
 
     @Override
     public void onFinish(ITestContext context) {
-        extent.flush();
+        flushReport();  // final flush
         testsMap.clear();
 
         try {
@@ -130,6 +153,11 @@ public class ExtentTestNGReporter implements ITestListener {
     // ===================== PAGE ACCESSORS =====================
     public static void setPage(Page p) { page = p; }
     public static Page getPage() { return page; }
+
+    // ===================== TEST ACCESSORS =====================
     public static ExtentTest getTest() { return testsMap.get(Thread.currentThread().getId()); }
     public static String getReportPath() { return reportPath; }
+
+    // ===================== EXTENT REPORT INSTANCE =====================
+    public static ExtentReports getExtentReportsInstance() { return extent; }
 }

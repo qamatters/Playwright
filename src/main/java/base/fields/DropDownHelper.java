@@ -124,4 +124,11 @@ public class DropDownHelper {
         }
         return choices;
     }
+
+    public static List<String> getAllOptionsFastImplementation(Locator dropDown) {
+        return dropDown.locator("option").allInnerTexts().stream()
+                .map(String::trim)
+                .collect(Collectors.toList());
+    }
+
 }
