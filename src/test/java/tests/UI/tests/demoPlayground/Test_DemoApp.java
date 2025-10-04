@@ -2,6 +2,7 @@ package tests.UI.tests.demoPlayground;
 
 
 import base.BaseUITest;
+import listeners.ReportUtil;
 import org.testng.annotations.Test;
 import tests.UI.pages.demoPlayground.api.DeleteUser;
 import tests.UI.pages.demoPlayground.ui.HomePage;
@@ -21,7 +22,7 @@ public class Test_DemoApp extends BaseUITest {
 
         try {
             homePage.createUser(userName);
-            System.out.println("Created User: " + userName);
+            ReportUtil.logInfo("Created User: " + userName);
             homePage.validateAddedUser(userName);
         } finally {
             deleteUser.deleteCreatedUser(userName);

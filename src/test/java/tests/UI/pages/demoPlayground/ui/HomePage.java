@@ -30,7 +30,7 @@ public class HomePage extends BasePage {
         enterName.fill(userName);
         enterEmail.fill(email);
         addUserButton.click();
-        ReportUtil.logInfo("User information is entered and login button is clicked");
+        ReportUtil.logInfo("User information is entered and Add User button is clicked");
         searchEmail.fill(email);
         return userName;
     }
