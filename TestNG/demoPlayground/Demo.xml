@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="DemoApp" verbose="5">
+    <listeners>
+        <listener class-name="listeners.ExtentTestNGReporter" />
+    </listeners>
+    <test name="DemoApp-Test">
+        <parameter name="browser" value="chrome"/>
+        <parameter name="headless" value="false"/>
+        <parameter name="logMode" value="file"/>
+        <parameter name="url" value="https://testwithease.blogspot.com/"/>
+        <parameter name="videoRecording" value="false"/>
+        <parameter name="enableScreenShotOnSuccess" value="false"></parameter>
+        <classes>
+            <class name="tests.UI.tests.demoPlayground.Test_DemoApp"></class>
+        </classes>
+    </test> <!-- Test -->
+</suite> <!-- Suite -->
