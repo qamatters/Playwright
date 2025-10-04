@@ -4,7 +4,6 @@ import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.MediaEntityBuilder;
 import com.microsoft.playwright.Page;
 import org.testng.asserts.SoftAssert;
-import utils.LiveExtentLogger;
 
 import java.io.IOException;
 
@@ -44,7 +43,6 @@ public class ReportUtil extends ExtentTestNGReporter {
     public static void logInfo(String message) {
         ExtentTest test = getCurrentTest();
         if (test != null) test.info(message);
-        LiveExtentLogger.log(test != null ? test.getModel().getName() : "UnknownTest", message, null);
         flushReport();
     }
 
@@ -62,7 +60,6 @@ public class ReportUtil extends ExtentTestNGReporter {
             } else {
                 test.pass(liveMessage);
             }
-            LiveExtentLogger.log(test.getModel().getName(), liveMessage, "Passed");
         }
         flushReport();
     }
@@ -72,7 +69,6 @@ public class ReportUtil extends ExtentTestNGReporter {
         if (test != null) {
             String liveMessage = "Validation Failed: " + message;
             test.fail(liveMessage);
-            LiveExtentLogger.log(test.getModel().getName(), liveMessage, "Failed");
         }
         flushReport();
     }
@@ -82,7 +78,6 @@ public class ReportUtil extends ExtentTestNGReporter {
         if (test != null) {
             String liveMessage = "Warning: " + message;
             test.warning(liveMessage);
-            LiveExtentLogger.log(test.getModel().getName(), liveMessage, "Warning");
         }
         flushReport();
     }
@@ -132,9 +127,7 @@ public class ReportUtil extends ExtentTestNGReporter {
         try {
             String path = ScreenshotUtil.captureScreenshot("AssertFail_" + System.currentTimeMillis());
             getCurrentTest().fail(fullMessage, MediaEntityBuilder.createScreenCaptureFromPath(path).build());
-            LiveExtentLogger.log(getCurrentTest().getModel().getName(), fullMessage, "Failed");
         } catch (IOException e) {
-            LiveExtentLogger.log(getCurrentTest().getModel().getName(), fullMessage + " (Screenshot capture failed)", "Failed");
         }
         flushReport();
     }
@@ -144,9 +137,8 @@ public class ReportUtil extends ExtentTestNGReporter {
         try {
             String path = ScreenshotUtil.captureScreenshot("VerificationFail_" + System.currentTimeMillis());
             getCurrentTest().fail(fullMessage, MediaEntityBuilder.createScreenCaptureFromPath(path).build());
-            LiveExtentLogger.log(getCurrentTest().getModel().getName(), fullMessage, "Failed");
         } catch (IOException e) {
-            LiveExtentLogger.log(getCurrentTest().getModel().getName(), fullMessage + " (Screenshot capture failed)", "Failed");
+
         }
         softAssert.fail(fullMessage);
         flushReport();
@@ -230,16 +222,15 @@ public class ReportUtil extends ExtentTestNGReporter {
 
             if (test != null) {
                 test.fail(message);
-                LiveExtentLogger.log(test.getModel().getName(), message, "Failed");
+
                 try {
                     String path = ScreenshotUtil.captureScreenshot("UncaughtException_" + System.currentTimeMillis());
                     test.fail("Screenshot for uncaught exception", MediaEntityBuilder.createScreenCaptureFromPath(path).build());
                 } catch (IOException e) {
-                    LiveExtentLogger.log(test.getModel().getName(),
-                            "Failed to capture screenshot for uncaught exception: " + e.getMessage(), "Failed");
+
                 }
             } else {
-                LiveExtentLogger.log("UnknownTest", message, "Failed");
+
             }
             flushReport();
         });
