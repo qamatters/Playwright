@@ -65,11 +65,12 @@ public class ReportUtil extends ExtentTestNGReporter {
     }
 
     public static void logFail(String message) {
+        String liveMessage = "Validation Failed: " + message;
         ExtentTest test = getCurrentTest();
         if (test != null) {
-            String liveMessage = "Validation Failed: " + message;
             test.fail(liveMessage);
         }
+        softAssert.fail(liveMessage);
         flushReport();
     }
 
