@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="AutomationPlaygroundBankingApplication" verbose="5">
+    <listeners>
+        <listener class-name="listeners.ExtentTestNGReporter" />
+    </listeners>
+    <test name="Bank Demo App Test">
+        <parameter name="browser" value="chrome"/>
+        <parameter name="headless" value="false"/>
+        <parameter name="logMode" value="All"/>
+        <parameter name="url" value="https://qamatters.github.io/demoautomationWebSite/index.html"/>
+        <parameter name="videoRecording" value="false"/>
+        <parameter name="enableScreenShotOnSuccess" value="false"></parameter>
+        <classes>
+            <class name="tests.UI.tests.playground.insurance.InsuranceLoginPageTest"></class>
+        </classes>
+    </test> <!-- Test -->
+</suite> <!-- Suite -->
