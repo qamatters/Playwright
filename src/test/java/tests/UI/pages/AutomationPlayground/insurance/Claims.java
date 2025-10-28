@@ -2,6 +2,7 @@ package tests.UI.pages.AutomationPlayground.insurance;
 
 import base.BasePage;
 import base.fields.TableHelper;
+import base.fields.WaitHelper;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.AriaRole;
@@ -11,6 +12,7 @@ import java.nio.file.Paths;
 import java.util.List;
 
 import static base.fields.AlertHelper.handleSimpleAlert;
+import static base.fields.TableHelper.getCellValueLocator;
 
 public class Claims extends BasePage {
     private final Locator myClaimsTitle;
@@ -21,6 +23,9 @@ public class Claims extends BasePage {
 
     private final Locator claimFile;
     private final Locator submitButton;
+    private final Locator approveButton;
+    private final Locator rejectButton;
+    private final Locator settleButton;
 
     public Claims(Page page) {
         super(page);
@@ -31,6 +36,9 @@ public class Claims extends BasePage {
         this.claimAmount = page.getByPlaceholder("Claim Amount");
         this.claimFile = page.locator("#claimFile");
         this.submitButton = page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Submit"));
+        this.approveButton = page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Approve"));
+        this.rejectButton = page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Reject"));
+        this.settleButton = page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Settle"));
     }
 
     public List<String> getExistingClaims() {
@@ -68,10 +76,55 @@ public class Claims extends BasePage {
         ReportUtil.assertTrue(lastValue.contains("Review"), "Status is " + lastValue);
     }
 
-    public void approveClaim(String claim) {
-        int row = TableHelper.findRowIndexByCellValue(tableLocator,7,claim);
-        String cellValues = TableHelper.getCellValue(tableLocator,row,7);
+    public void approveClaim(String policy) {
+        int row = TableHelper.findRowIndexByCellValue(tableLocator, 1, policy);
+        System.out.println("row is :" + row);
+        Locator actionClassLocator = getCellValueLocator(tableLocator, row, 7);
+        String actionCellValues = TableHelper.getCellValue(tableLocator, row, 7);
+        System.out.println("Action Available are :" + actionCellValues);
+        String statusValue = TableHelper.getCellValue(tableLocator, row, 4);
+        System.out.println("Current status is :" + statusValue);
+        if (actionCellValues.contains("Approve")) {
+            Locator approveActionLocator = actionClassLocator.locator(approveButton);
+            approveActionLocator.click();
+        }
+        WaitHelper.waitForSpecificTextToAppear(getCellValueLocator(tableLocator, row, 4), "Approved", 5000, "Claim status");
+        String updatedStatus = TableHelper.getCellValue(tableLocator, row, 4);
+        ReportUtil.assertTrue(updatedStatus.contains("Approved"), policy + " is  Approved now ");
+    }
 
+    public void rejectClaim(String policy) {
+        int row = TableHelper.findRowIndexByCellValue(tableLocator, 1, policy);
+        System.out.println("row is :" + row);
+        Locator actionClassLocator = getCellValueLocator(tableLocator, row, 7);
+        String actionCellValues = TableHelper.getCellValue(tableLocator, row, 7);
+        System.out.println("Action Available are :" + actionCellValues);
+        String statusValue = TableHelper.getCellValue(tableLocator, row, 4);
+        System.out.println("Current status is :" + statusValue);
+        if (actionCellValues.contains("Reject")) {
+            Locator actionLocator = actionClassLocator.locator(rejectButton);
+            actionLocator.click();
+        }
+        WaitHelper.waitForSpecificTextToAppear(getCellValueLocator(tableLocator, row, 4), "Rejected", 5000, "Claim status");
+        String updatedStatus = TableHelper.getCellValue(tableLocator, row, 4);
+        ReportUtil.assertEquals(updatedStatus,"Rejected", policy + " is Rejected now");
+    }
+
+    public void settleClaim(String policy) {
+        int row = TableHelper.findRowIndexByCellValue(tableLocator, 1, policy);
+        System.out.println("row is :" + row);
+        Locator actionClassLocator = getCellValueLocator(tableLocator, row, 7);
+        String actionCellValues = TableHelper.getCellValue(tableLocator, row, 7);
+        System.out.println("Action Available are :" + actionCellValues);
+        String statusValue = TableHelper.getCellValue(tableLocator, row, 4);
+        System.out.println("Current status is :" + statusValue);
+        if (actionCellValues.contains("Settle")) {
+            Locator actionLocator = actionClassLocator.locator(settleButton);
+            actionLocator.click();
+        }
+        WaitHelper.waitForSpecificTextToAppear(getCellValueLocator(tableLocator, row, 4), "Settled", 5000, "Claim status");
+        String updatedStatus = TableHelper.getCellValue(tableLocator, row, 4);
+        ReportUtil.assertEquals(updatedStatus,"Settled", policy + " is Settled now");
     }
 
 }

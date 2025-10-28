@@ -2,7 +2,7 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="AutomationPlaygroundBankingApplication" verbose="5">
     <listeners>
-        <listener class-name="listeners.ExtentTestNGReporter" />
+        <listener class-name="listeners.ExtentTestNGReporter"/>
     </listeners>
     <test name="Bank Demo App Test">
         <parameter name="browser" value="chrome"/>
@@ -12,8 +12,10 @@
         <parameter name="videoRecording" value="false"/>
         <parameter name="enableScreenShotOnSuccess" value="false"></parameter>
         <classes>
-<!--            <class name="tests.UI.tests.playground.insurance.InsuranceLoginPageTest"></class>-->
-            <class name="tests.UI.tests.playground.insurance.SubmitClaimPageValidation"></class>
+            <class name="tests.UI.tests.playground.insurance.InsuranceLoginPageTest"></class>
+            <class name="tests.UI.tests.playground.insurance.SubmitAndApproveClaimPageValidation"></class>
+            <class name="tests.UI.tests.playground.insurance.RejectClaimPageValidation"></class>
+            <class name="tests.UI.tests.playground.insurance.SettleClaimPageValidation"></class>
         </classes>
     </test> <!-- Test -->
 </suite> <!-- Suite -->

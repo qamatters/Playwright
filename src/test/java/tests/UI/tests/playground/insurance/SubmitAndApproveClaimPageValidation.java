@@ -8,10 +8,8 @@ import tests.UI.pages.AutomationPlayground.insurance.InsuranceLoginPage;
 import tests.utils.DateTimeUtility;
 import utils.Logger;
 
-public class SubmitClaimPageValidation extends BaseUITest {
+public class SubmitAndApproveClaimPageValidation extends BaseUITest {
     String claim = "P1005" + DateTimeUtility.getCurrentDateTimeInSpecificFormat();
-
-
     @Test
     public void validateClaimSubmissionFromUser() {
         InsuranceLoginPage loginPage = new InsuranceLoginPage(page);
@@ -27,9 +25,7 @@ public class SubmitClaimPageValidation extends BaseUITest {
         loginPage.validateUserLogin();
         claims.submitNewClaim(claim, claimAmount);
         loginPage.logOut();
-
     }
-
     @Test(dependsOnMethods = "validateClaimSubmissionFromUser")
     public void validateClaimsFromAdmin() {
         InsuranceLoginPage loginPage = new InsuranceLoginPage(page);

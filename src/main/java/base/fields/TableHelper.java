@@ -29,6 +29,12 @@ public class TableHelper {
         return cell.innerText().trim();
     }
 
+    // ================= GET CELL VALUE Locator=================
+    public static Locator getCellValueLocator(Locator table, int rowIndex, int colIndex) {
+       return table.locator("tr").nth(rowIndex).locator("td, th").nth(colIndex);
+    }
+
+
     // ================= GET ENTIRE ROW =================
     public static List<String> getRowValues(Locator table, int rowIndex) {
         List<String> values = new ArrayList<>();
