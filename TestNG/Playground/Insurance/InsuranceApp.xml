@@ -12,7 +12,8 @@
         <parameter name="videoRecording" value="false"/>
         <parameter name="enableScreenShotOnSuccess" value="false"></parameter>
         <classes>
-            <class name="tests.UI.tests.playground.insurance.InsuranceLoginPageTest"></class>
+<!--            <class name="tests.UI.tests.playground.insurance.InsuranceLoginPageTest"></class>-->
+            <class name="tests.UI.tests.playground.insurance.SubmitClaimPageValidation"></class>
         </classes>
     </test> <!-- Test -->
 </suite> <!-- Suite -->
