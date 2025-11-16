@@ -110,7 +110,7 @@ public abstract class BaseUITest {
         try {
             long start = System.currentTimeMillis();
             stopTracingAndSave();
-            Logger.log("Tracing stopped in " + (System.currentTimeMillis() - start) + "ms", logMode);
+//            Logger.log("Tracing stopped in " + (System.currentTimeMillis() - start) + "ms", logMode);
 
             start = System.currentTimeMillis();
             if (page != null) {
@@ -119,21 +119,18 @@ public abstract class BaseUITest {
                     if (video != null) {
                         Path videoPath = VIDEO_DIR.resolve("test-video.webm");
                         video.saveAs(videoPath);
-                        Logger.log("Video saved at " + videoPath, logMode);
+//                        Logger.log("Video saved at " + videoPath, logMode);
                     }
                 } catch (Exception e) {
-                    System.out.println("Video save failed: " + e.getMessage());
+//                    System.out.println("Video save failed: " + e.getMessage());
                 }
 
                 page.onDialog(dialog -> {
-                    Logger.log("Unexpected dialog dismissed during teardown: " + dialog.message(), logMode);
                     dialog.dismiss();
                 });
 
                 try {
-                    Logger.log("Waiting for network idle before closing page...", logMode);
                     page.waitForLoadState(LoadState.NETWORKIDLE, new Page.WaitForLoadStateOptions().setTimeout(5000));
-                    Logger.log("Network idle reached", logMode);
                 } catch (Exception e) {
                     Logger.log("Network idle wait failed: " + e.getMessage(), logMode);
                 }
@@ -144,26 +141,19 @@ public abstract class BaseUITest {
 
             start = System.currentTimeMillis();
             if (context != null) {
-                Logger.log("Closing context...", logMode);
                 context.close();
-                Logger.log("Context closed in " + (System.currentTimeMillis() - start) + "ms", logMode);
             }
 
             start = System.currentTimeMillis();
             if (browser != null) {
-                Logger.log("Checking for open pages before closing browser", logMode);
                 browser.contexts().forEach(ctx -> ctx.pages().forEach(p ->
                         Logger.log("Page URL: " + p.url(), logMode)
                 ));
-                Logger.log("Ensure all downloads are completed during test execution; Playwright Java doesn't expose download lists.", logMode);
-
-                Logger.log("Attempting to close browser with timeout wrapper", logMode);
                 ExecutorService executor = Executors.newSingleThreadExecutor();
                 Future<?> future = executor.submit(() -> {
                     try {
                         Logger.log("Closing browser...", logMode);
                         browser.close();
-                        Logger.log("Browser closed successfully", logMode);
                     } catch (Exception e) {
                         Logger.log("Browser close failed: " + e.getMessage(), logMode);
                     }
@@ -183,9 +173,7 @@ public abstract class BaseUITest {
 
             start = System.currentTimeMillis();
             if (playwright != null) {
-                Logger.log("Closing playwright...", logMode);
                 playwright.close();
-                Logger.log("Playwright closed in " + (System.currentTimeMillis() - start) + "ms", logMode);
             }
 
         } catch (Exception e) {
@@ -209,9 +197,9 @@ public abstract class BaseUITest {
     @AfterMethod(alwaysRun = true)
     public void tearDown(ITestResult result) {
         try {
-            System.out.println("Asserting all");
+//            System.out.println("Asserting all");
             ReportUtil.assertAll();
-            System.out.println("Assertion validation completed for all use cases");
+//            System.out.println("Assertion validation completed for all use cases");
         } catch (AssertionError e) {
             System.out.println("Assertion failure details: " + e.getMessage());
             if (result.getAttribute("extentLogged") == null) {
