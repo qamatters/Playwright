@@ -137,7 +137,7 @@ public abstract class BaseUITest {
 
                 page.close();
             }
-            Logger.log("Video and page close in " + (System.currentTimeMillis() - start) + "ms", logMode);
+//            Logger.log("Video and page close in " + (System.currentTimeMillis() - start) + "ms", logMode);
 
             start = System.currentTimeMillis();
             if (context != null) {
