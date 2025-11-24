@@ -12,6 +12,7 @@ public class InsuranceLoginPageTest extends BaseUITest {
     public void validateLoginPage() {
         InsuranceLoginPage loginPage = new InsuranceLoginPage(page);
         Claims claims = new Claims(page);
+        page.pause();// added for debugging
         Logger.formattedLog("Testing JIRA_301_Login Page Validation", logMode);
         page.navigate("https://qamatters.github.io/demoautomationWebSite/WorkFlows/insurance/login.html");
         Logger.formattedLog("Demo app title: " + page.title(),this.logMode);

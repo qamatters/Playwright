@@ -50,7 +50,7 @@ public class InsuranceLoginPage extends BasePage {
     }
 
     public void loginToInsurancePortal(String testUserName, String testUserPassword) {
-        if (testUserName.contains("admin")) {
+        if (testUserName.contains("admin1")) {// user name is changed for testing
             adminUserName.fill(testUserName);
             adminPassword.fill(testUserPassword);
             loginButtonForAdmin.click();
@@ -63,6 +63,11 @@ public class InsuranceLoginPage extends BasePage {
     }
 
     public void validateUserLogin() {
+        try {
+            Thread.sleep(1000); // hardcoded wait for debugging
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         waitForVisible(submitYourClaimTitle, 10000);
         ReportUtil.verifyTrue(submitYourClaimTitle.isVisible(), "Submit your claim title is available");
     }
